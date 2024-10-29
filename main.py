@@ -5,6 +5,7 @@ import ctypes
 import re
 import os
 import subprocess
+from tkinter import filedialog
 
 # Setup Tkinter
 root = Tk()
@@ -21,16 +22,26 @@ directory_path = "/Users/antoninsiska/Documents/fll"
 
 
 # Menu
-def open_settings():
-    global directory_path, specific_file_names
 
-    new_directory_path = simpledialog.askstring("Directory Path", "Enter new directory path:", initialvalue=directory_path)
+
+def open_settings():
+    global directory_path, specific_file_names, fileName
+
+    # Možnost výběru složky
+    new_directory_path = filedialog.askdirectory(title="Select Directory Path", initialdir=directory_path)
     if new_directory_path:
         directory_path = new_directory_path
 
-    new_file_names = simpledialog.askstring("Specific File Names", "Enter specific file names (comma separated):", initialvalue=", ".join(specific_file_names))
-    if new_file_names:
-        specific_file_names = [name.strip() for name in new_file_names.split(",")]
+    # Možnost výběru specifických souborů
+    selected_files = filedialog.askopenfilenames(
+        title="Select Specific Files",
+        filetypes=(("Python Files", "*.py"), ("All Files", "*.*")),
+        initialdir=directory_path
+    )
+    if selected_files:
+        specific_file_names = [os.path.basename(file) for file in selected_files]
+
+    
 
     load_files(directory_path)
 
@@ -48,9 +59,14 @@ def PybricksDirectorySettigns():
 
 def DemoFileSettings():
     global demoFileName
-    newDemoFileName = simpledialog.askstring("Demo file", "Enter demo file name:", initialvalue=fileName)
-    if newDemoFileName:
-        fileName = newDemoFileName
+    # Možnost výběru demo souboru
+    demo_file_path = filedialog.askopenfilename(
+        title="Select Demo File",
+        filetypes=(("Python Files", "*.py"), ("All Files", "*.*")),
+        initialdir=directory_path
+    )
+    if demo_file_path:
+        fileName = os.path.basename(demo_file_path)
 
 def ImageDirectorySettings():
     global imageDirectory
@@ -58,12 +74,13 @@ def ImageDirectorySettings():
     if newImageDirectory:
         imageDirectory = newImageDirectory
 
-def VerifyCommand(command:list):
+def VerifyCommand(command:list, cwd=None):
     try:
         result = subprocess.run(
                     command,
                     capture_output=True,
-                    text=True
+                    text=True,
+                    cwd=cwd
                 )
         if result.returncode == 0:
             messagebox.showinfo("Success", "Command executed successfully!")
@@ -71,20 +88,19 @@ def VerifyCommand(command:list):
             messagebox.showerror("Error", f"Command failed: {result.stderr}")
     except Exception as e:
             messagebox.showerror("Error", f"Execution failed: {e}")
-    
+
     print(result.returncode)
     print(result.stdout)
     print(result.stderr)
 
 
 def GetCommit():
-    
     githubBool = SetGithub(ask=False)
     if githubBool:
         commit = simpledialog.askstring("Commit message", "Enter commit message:")
-        VerifyCommand(["git", "add", "."])
-        VerifyCommand(['git', 'commit', '-m', commit])
-        VerifyCommand(['git', 'push'])
+        VerifyCommand(["git", "add", "."], cwd=directory_path)
+        VerifyCommand(['git', 'commit', '-m', commit], cwd=directory_path)
+        VerifyCommand(['git', 'push'], cwd=directory_path)
     else:
         messagebox.showwarning("GitHub control", "Bad password")
     
@@ -111,6 +127,18 @@ def execute(event=None):
         messagebox.showwarning("Warning", "No file opened.")
 
 
+def SaveFile(event=None):
+    global current_file
+
+    if current_file:
+        with open(current_file, 'w', encoding='utf-8') as f:
+            f.write(editArea.get('1.0', END))
+        
+        VerifyCommand(['sh', '-c', f'cd {directory_path} && {pybrikcsDirectory} run ble -n {hubName} {fileName}'])
+    else:
+        messagebox.showwarning("Warning", "No file opened.")
+    
+    messagebox.showinfo("Info", "Soubor se uložil")
 
 
 
@@ -203,7 +231,7 @@ menu_bar.add_cascade(label="Control", menu=controls_menu)
 controls_menu.add_command(label="Upload and run", command=execute)
 controls_menu.add_command(label="Create commit", command=GetCommit)
 controls_menu.add_command(label="Pull", command=Pull)
-
+controls_menu.add_command(label="Save", command=SaveFile)
 file_list_frame = tk.Frame(root, bg="#2d2d2d", width=100)
 file_list_frame.pack(side=tk.LEFT, fill=tk.Y)
 
@@ -282,5 +310,6 @@ load_files(directory_path)
 file_list.bind('<ButtonRelease-1>', load_selected_file)
 editArea.bind('<KeyRelease>', changes)
 root.bind('<Command-r>', execute)
+root.bind('<Command-s>', SaveFile)
 
 root.mainloop()
