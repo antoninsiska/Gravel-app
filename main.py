@@ -6,19 +6,67 @@ import re
 import os
 import subprocess
 from tkinter import filedialog
+from PIL import Image, ImageTk
 
-# Setup Tkinter
+# Nastavení Tkinter
 root = Tk()
 root.geometry('1000x1000')
 root.title("Gravel")
 hubName = "HUB_FLL08"
-pybrikcsDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
+pybricksDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
 fileName = "main.py"
 specific_file_names = ["demo.py", "demoRide.py", "testRide.py"]
-
 githubString = "Off"
-# Folder where files are saved
 directory_path = "/Users/antoninsiska/Documents/fll"
+
+# Druhé okno pro zobrazení obrázku
+image_window = Toplevel(root)
+image_window.geometry('800x800')
+image_window.title("Obrázek s čárami")
+
+# Načtení obrázku
+image_path = '/Users/antoninsiska/Documents/Gravel-app/image.jpeg'
+img = Image.open(image_path)
+img_tk = ImageTk.PhotoImage(img)
+
+# Barva pozadí obrázku (která se bude ignorovat při klikání)
+background_color = img.getpixel((0, 0))
+
+def handle_image_click(event):
+    x, y = event.x, event.y
+    clicked_color = img.getpixel((x, y))
+    
+    if clicked_color == background_color:
+        return  # Ignoruje kliknutí na pozadí
+
+    # Určení akce na základě barvy čáry
+    if clicked_color[0] >= 230:  # Červená
+        messagebox.showinfo("Akce", "Otevření souboru pro červenou čáru")
+        open_specific_file("demo.py")
+    elif clicked_color == (0, 255, 0):  # Zelená
+        messagebox.showinfo("Akce", "Otevření souboru pro zelenou čáru")
+        open_specific_file("demoRide.py")
+    elif clicked_color >= (0, 0, 230):  # Modrá
+        messagebox.showinfo("Akce", "Otevření souboru pro modrou čáru")
+        open_specific_file("testRide.py")
+    else:
+        messagebox.showinfo("Info", f"Kliknutí na neznámou barvu: {clicked_color}")
+
+def open_specific_file(filename):
+    file_path = os.path.join(directory_path, filename)
+    try:
+        with open(file_path, "r") as file:
+            content = file.read()
+            editArea.delete('1.0', END)
+            editArea.insert('1.0', content)
+    except Exception as e:
+        messagebox.showerror("Chyba", f"Soubor nelze otevřít: {e}")
+
+# Zobrazení obrázku v druhém okně
+canvas = Canvas(image_window, width=img.width, height=img.height)
+canvas.pack()
+canvas.create_image(0, 0, anchor=NW, image=img_tk)
+canvas.bind("<Button-1>", handle_image_click)
 
 
 # Menu
