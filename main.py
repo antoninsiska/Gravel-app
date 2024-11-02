@@ -21,12 +21,13 @@ directory_path = "/Users/antoninsiska/Documents/fll"
 
 # Druhé okno pro zobrazení obrázku
 image_window = Toplevel(root)
-image_window.geometry('800x800')
+image_window.geometry('1000x600')
 image_window.title("Obrázek s čárami")
 
 # Načtení obrázku
 image_path = '/Users/antoninsiska/Documents/Gravel-app/image.jpeg'
 img = Image.open(image_path)
+img = img.resize((1000, 600))
 img_tk = ImageTk.PhotoImage(img)
 
 # Barva pozadí obrázku (která se bude ignorovat při klikání)
@@ -43,10 +44,10 @@ def handle_image_click(event):
     if clicked_color[0] >= 230:  # Červená
         messagebox.showinfo("Akce", "Otevření souboru pro červenou čáru")
         open_specific_file("demo.py")
-    elif clicked_color == (0, 255, 0):  # Zelená
+    elif clicked_color[1] >= 200 and clicked_color[2] >= 50:  # Zelená
         messagebox.showinfo("Akce", "Otevření souboru pro zelenou čáru")
         open_specific_file("demoRide.py")
-    elif clicked_color >= (0, 0, 230):  # Modrá
+    elif clicked_color[0] <= 30 and clicked_color[1] <= 120 and clicked_color[2] >= 240:  # Modrá
         messagebox.showinfo("Akce", "Otevření souboru pro modrou čáru")
         open_specific_file("testRide.py")
     else:
