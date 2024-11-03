@@ -13,22 +13,33 @@ root = Tk()
 root.geometry('1000x1000')
 root.title("Gravel")
 hubName = "HUB_FLL08"
-pybricksDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
+pybrikcsDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
 fileName = "main.py"
 specific_file_names = ["demo.py", "demoRide.py", "testRide.py"]
 githubString = "Off"
 directory_path = "/Users/antoninsiska/Documents/fll"
 
-# Druhé okno pro zobrazení obrázku
-image_window = Toplevel(root)
-image_window.geometry('1000x600')
-image_window.title("Obrázek s čárami")
+rides = {
+    "Red": "Zelená",
+    "Green": "Modrá",
+    "Black": "Červená",
+    "Pink": "None",
+    "Purple": "None",
+    "Yellow": "None",
+
+}
 
 # Načtení obrázku
 image_path = '/Users/antoninsiska/Documents/Gravel-app/image.jpeg'
 img = Image.open(image_path)
 img = img.resize((1000, 600))
 img_tk = ImageTk.PhotoImage(img)
+
+# Otevření okna s obrázkem
+
+
+
+
 
 # Barva pozadí obrázku (která se bude ignorovat při klikání)
 background_color = img.getpixel((0, 0))
@@ -41,19 +52,52 @@ def handle_image_click(event):
         return  # Ignoruje kliknutí na pozadí
 
     # Určení akce na základě barvy čáry
-    if clicked_color[0] >= 230:  # Červená
+    if clicked_color[0] >= 230 and clicked_color[1] <= 50 and clicked_color[2] <= 70:  # Červená
         messagebox.showinfo("Akce", "Otevření souboru pro červenou čáru")
         open_specific_file("demo.py")
-    elif clicked_color[1] >= 200 and clicked_color[2] >= 50:  # Zelená
+
+    elif clicked_color[0] <= 100 and clicked_color[1] >= 200 and clicked_color[2] >= 50:  # Zelená
         messagebox.showinfo("Akce", "Otevření souboru pro zelenou čáru")
         open_specific_file("demoRide.py")
+
     elif clicked_color[0] <= 30 and clicked_color[1] <= 120 and clicked_color[2] >= 240:  # Modrá
         messagebox.showinfo("Akce", "Otevření souboru pro modrou čáru")
         open_specific_file("testRide.py")
+    
+    elif clicked_color[0] <= 5 and clicked_color[1] <= 5 and clicked_color[2] <= 5:
+        messagebox.showinfo("Akce", "Kliknuto na černou")
+
+    elif clicked_color[0] >= 210 and clicked_color[1] >= 195 and clicked_color[2] <= 50:
+        messagebox.showinfo("Akce", "Kliknuto na žlutou barvu")
+
+    elif clicked_color[0] <= 155 and clicked_color[1] <= 60 and clicked_color[2] >= 160:
+        messagebox.showinfo("Akce", "Kliknuto na fialovou")
     else:
         messagebox.showinfo("Info", f"Kliknutí na neznámou barvu: {clicked_color}")
 
+
+def OpenMap():
+    global image_path, img_tk, img
+    # Druhé okno pro zobrazení obrázku
+    image_window = Toplevel(root)
+    image_window.geometry('1000x600')
+    image_window.title("Obrázek s čárami")
+
+    # Zobrazení obrázku v druhém okně
+    canvas = Canvas(image_window, width=img.width, height=img.height)
+    canvas.pack()
+    canvas.create_image(0, 0, anchor=NW, image=img_tk)
+    canvas.bind("<Button-1>", handle_image_click)
+
+    return image_window
+
+image_window = OpenMap()
+
+
 def open_specific_file(filename):
+
+    if filename == "None" or filename == None:
+        messagebox.showerror("No file", "You havent set any file")
     file_path = os.path.join(directory_path, filename)
     try:
         with open(file_path, "r") as file:
@@ -64,13 +108,20 @@ def open_specific_file(filename):
         messagebox.showerror("Chyba", f"Soubor nelze otevřít: {e}")
 
 # Zobrazení obrázku v druhém okně
-canvas = Canvas(image_window, width=img.width, height=img.height)
-canvas.pack()
-canvas.create_image(0, 0, anchor=NW, image=img_tk)
-canvas.bind("<Button-1>", handle_image_click)
 
 
-# Menu
+
+
+
+class Rides:
+
+    def Red():
+        open_specific_file()
+    def Green():
+        pass
+
+
+
 
 
 def open_settings():
@@ -281,8 +332,23 @@ controls_menu.add_command(label="Upload and run", command=execute)
 controls_menu.add_command(label="Create commit", command=GetCommit)
 controls_menu.add_command(label="Pull", command=Pull)
 controls_menu.add_command(label="Save", command=SaveFile)
+controls_menu.add_command(label="Open map", command=OpenMap)
 file_list_frame = tk.Frame(root, bg="#2d2d2d", width=100)
 file_list_frame.pack(side=tk.LEFT, fill=tk.Y)
+
+
+rides_menu = Menu(menu_bar, tearoff=2)
+menu_bar.add_cascade(label="Rides", menu=rides_menu)
+menu_bar.add_command(label="Red", command=Rides.Red)
+menu_bar.add_command(label="Green", command=Rides.Green)
+menu_bar.add_command(label="Black", command=Rides.Black)
+menu_bar.add_command(label="Blue", command=Rides.Blue)
+menu_bar.add_command(label="Yellow", command=Rides.Yellow)
+menu_bar.add_command(label="Purlple", command=Rides.Purple)
+menu_bar.add_command(label="Pink", command=Rides.Pink)
+
+
+
 
 # Listbox for files
 file_list = tk.Listbox(file_list_frame, bg="#333333", fg="white", selectbackground="#444444")
