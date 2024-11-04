@@ -1,11 +1,14 @@
 from tkinter import *
-from tkinter import messagebox, Listbox, simpledialog
+from tkinter import messagebox, Listbox, simpledialog, font, filedialog
 import tkinter as tk
 import re
 import os
 import subprocess
 from tkinter import filedialog
 from PIL import Image, ImageTk
+from markdown2 import Markdown
+from tkhtmlview import HTMLLabel
+from tkinter import messagebox as mbox
 
 class TextFormating:
     def search_re(pattern, text, groupid=0):
@@ -29,9 +32,10 @@ class Contstants:
     hubName = "HUB_FLL08"
     pybrikcsDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
     fileName = "main.py"
-    specific_file_names = ["demo.py", "demoRide.py", "testRide.py"]
+    specific_file_names = ["main.py"]
     githubString = "Off"
-    directory_path = "/Users/antoninsiska/Documents/fll"
+    directory_path = "/Users/antoninsiska/Documents/3D/"
+    
 
     rides = {
         "Red": "None",
@@ -320,6 +324,8 @@ class Settings:
 
 class GitHub:
 
+   
+
     def GetCommit():
         githubBool = Settings.SetGithub(ask=False)
         if githubBool:
@@ -430,6 +436,70 @@ class ButtonActions:
     def button4_action():
         messagebox.showinfo("Button 4", "Button 4 was clicked!")
 
+
+
+class Window:
+    def __init__(self, master=None):
+        self.rootMD = Toplevel(master)
+        self.myfont = font.Font(family="Helvetica", size=14)
+        self.init_window()
+        self.openfile()
+
+    def init_window(self):
+        self.rootMD.title("TDOWN")
+
+        self.rootMD.geometry("850x500")
+        # Vytvoření input editoru
+        self.inputeditor = Text(self.rootMD, width=1, font=self.myfont)
+        self.inputeditor.pack(fill=BOTH, expand=1, side=LEFT)
+
+        # Vytvoření výstupního boxu
+        self.outputbox = HTMLLabel(self.rootMD, width=1, background="white")
+        self.outputbox.pack(fill=BOTH, expand=1, side=RIGHT)
+        self.outputbox.fit_height()
+
+        # Bind event pro změnu inputu
+        self.inputeditor.bind("<<Modified>>", self.onInputChange)
+
+        # Vytvoření hlavního menu
+        self.mainmenu = Menu(self.rootMD)
+        self.filemenu = Menu(self.mainmenu)
+        self.filemenu.add_command(label="Open", command=self.openfile)
+        self.filemenu.add_command(label="Save as", command=self.savefile)
+        self.filemenu.add_separator()
+        self.filemenu.add_command(label="Exit", command=self.rootMD.quit)
+        self.mainmenu.add_cascade(label="File", menu=self.filemenu)
+        self.rootMD.config(menu=self.mainmenu)
+
+    def onInputChange(self, event):
+        self.inputeditor.edit_modified(0)
+        md2html = Markdown()
+        markdownText = self.inputeditor.get("1.0", END)
+        html = md2html.convert(markdownText)
+        self.outputbox.set_html(html)
+
+    def openfile(self):
+        openfilename = Contstants.directory_path + "/README.MD" 
+
+        """filedialog.askopenfilename(filetypes=(("Markdown File", "*.md , *.mdown , *.markdown"),("Text File", "*.txt"), ("All Files", "*.*")))"""
+        if openfilename:
+            try:
+                self.inputeditor.delete(1.0, END)
+                self.inputeditor.insert(END, open(openfilename).read())
+            except:
+                mbox.showerror("Error Opening Selected File", "Oops!, The file you selected: {} cannot be opened!".format(openfilename))
+    
+    def savefile(self):
+        filedata = self.inputeditor.get("1.0", END)
+        savefilename = filedialog.asksaveasfilename(filetypes=(("Markdown File", "*.md"),
+                                                                ("Text File", "*.txt")), title="Save Markdown File")
+        if savefilename:
+            try:
+                with open(savefilename, "w") as f:
+                    f.write(filedata)
+            except:
+                mbox.showerror("Error Saving File", "Oops!, The File: {} cannot be saved!".format(savefilename))
+
 # Nastavení Tkinter
 root = Contstants.root
 root.geometry('1000x1000')
@@ -454,11 +524,12 @@ file_list.pack(fill=tk.BOTH, expand=True)
 # Variable to track the currently opened file
 current_file = None
 editArea = Contstants.editArea
+
 # Add buttons below the file_list
 button1 = tk.Button(file_list_frame, text="Commit message", command=GitHub.GetCommit)
 button2 = tk.Button(file_list_frame, text="Pull", command=GitHub.Pull)
 button3 = tk.Button(file_list_frame, text="Get info")
-button4 = tk.Button(file_list_frame, text="Button 4", command=ButtonActions.button4_action)
+button4 = tk.Button(file_list_frame, text="Button 4", command=Window)
 
 button1.pack(fill=tk.X, padx=5, pady=2)
 button2.pack(fill=tk.X, padx=5, pady=2)

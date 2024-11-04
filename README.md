@@ -5,9 +5,10 @@
 #### Update
 - Rozdělení programu do jednotlivých Class
 - Program funguje lépe
+- Prototyp editoru pro markdown
 #### Přiště
 - Udělat dokumentaci a přidat komentáře
-- Přidat Editor markdown 
+- UPravit ukládání a otestovat
 ### 3.11.
 #### Update
 - Přidání menu pro jízdy
