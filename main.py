@@ -226,7 +226,6 @@ class Files:
             with open(current_file, 'w', encoding='utf-8') as f:
                 f.write(editArea.get('1.0', END))
             
-            Others.VerifyCommand(['sh', '-c', f'cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}'])
         else:
             messagebox.showwarning("Warning", "No file opened.")
         
@@ -339,28 +338,30 @@ class GitHub:
     def GetCommit():
         githubBool = True
         if githubBool:
-            a = messagebox.askquestion("GitHub", "Opravdu cheš vytvořit commit a nahrát ho na GitHub")
+            a = messagebox.askquestion("GitHub", "Opravdu cheš vytvořit commit")
             if a == "yes":
                 commit = simpledialog.askstring("Commit message", "Enter commit message:")
                 Others.VerifyCommand(["git", "add", "."], cwd=Contstants.directory_path)
                 Others.VerifyCommand(['git', 'commit', '-m', commit], cwd=Contstants.directory_path)   
                 Contstants.gitHubCommit = True
                 MenuBar.Update()
-        else:
-            messagebox.showwarning("GitHub control", "Bad password")
+     
         
 
     def Pull():
-        githubBool = Settings.SetGithub(ask=False)
-        if githubBool:
-            Others.VerifyCommand(['git', 'pull'])
-        else:
-            messagebox.showwarning("GitHub control", "Bad password")
+        a = messagebox.askquestion("GitHub", "Opravdu chceš vytvořit pull")
+        if a == "yes":
+            githubBool = Settings.SetGithub(ask=False)
+            if githubBool:
+                Others.VerifyCommand(['git', 'pull'])
+        
 
     def Push():
-        Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
-        Contstants.gitHubCommit = False
-        MenuBar.Update()
+        a = messagebox.askquestion("GitHub", "Opravdu chceš nahrát commit na github.")
+        if a == "yes":
+            Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
+            Contstants.gitHubCommit = False
+            MenuBar.Update()
     
 class Others:
 
@@ -427,13 +428,12 @@ class MenuBar:
     settings_menu.add_command(label="Demo file", command=Settings.DemoFileSettings)
     menu_bar.add_cascade(label="Settings", menu=settings_menu)
     root.config(menu=menu_bar)
-    #
-    
 
     controls_menu = Menu(menu_bar, tearoff=1)
     menu_bar.add_cascade(label="Control", menu=controls_menu)
     controls_menu.add_command(label="Upload and run", command=Others.execute)
     controls_menu.add_command(label="Create commit", command=GitHub.GetCommit)
+    controls_menu.add_command(label="Push", command=GitHub.Push)
     controls_menu.add_command(label="Pull", command=GitHub.Pull)
     controls_menu.add_command(label="Save", command=Files.SaveFile)
     controls_menu.add_command(label="Open map", command=Map.Open)
@@ -569,13 +569,11 @@ editArea = Contstants.editArea
 
 
 # Add buttons below the file_list
-
-
-
 button1 = tk.Button(file_list_frame, text="Commit message", command=GitHub.GetCommit)
 button2 = tk.Button(file_list_frame, text="Pull", command=GitHub.Pull)
 button3 = tk.Button(file_list_frame, text="Push", command=GitHub.Push)
-button4 = tk.Button(file_list_frame, text="Button 4", command=Window)
+button4 = tk.Button(file_list_frame, text="Markdown editor", command=Window)
+button5 = tk.Button(file_list_frame, text="")
 
 MenuBar.text1.pack(fill=tk.X, padx=5, pady=2)
 MenuBar.text2.pack(fill=tk.X, padx=5, pady=2)
