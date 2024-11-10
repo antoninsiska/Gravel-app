@@ -30,6 +30,8 @@ class Contstants:
 
     root = Tk()
 
+    gitHubCommit = False
+
     hubName = "HUB_FLL08"
     pybrikcsDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
     fileName = "demo.py"
@@ -97,6 +99,10 @@ class Contstants:
     # Nastavení mřížky na pružné roztažení
     root.grid_columnconfigure(1, weight=1)
     root.grid_rowconfigure(0, weight=1)
+
+
+    file_list_frame = tk.Frame(root, bg="#2d2d2d", width=100)
+    file_list_frame.pack(side=tk.LEFT, fill=tk.Y)
 
 class Map:
     def __init__(self):
@@ -291,6 +297,7 @@ class Settings:
         newHubName = simpledialog.askstring("Hub name", "Enter new hub name:", initialvalue=Contstants.hubName)
         if newHubName:
             Contstants.hubName = newHubName
+        MenuBar.Update()
 
     def PybricksDirectorySettigns():
         global pybricksDirectory
@@ -315,19 +322,15 @@ class Settings:
         if newImageDirectory:
             Contstants.imageDirectory = newImageDirectory
 
-    def SetGithub(ask = True):
-        githubPass = simpledialog.askstring("Image directory", "Enter image directory:", initialvalue=Contstants.githubString)
 
-        if githubPass == "TondaFLL":
-            return True
-        else:
-            return False
 
     def SetDeafult1():
         Contstants.hubName = "HUB_FLL08"
+        MenuBar.Update()
 
     def SetDeafult2():
         Contstants.hubName = "HUB_FLL07"
+        MenuBar.Update()
 
 class GitHub:
 
@@ -341,6 +344,8 @@ class GitHub:
                 commit = simpledialog.askstring("Commit message", "Enter commit message:")
                 Others.VerifyCommand(["git", "add", "."], cwd=Contstants.directory_path)
                 Others.VerifyCommand(['git', 'commit', '-m', commit], cwd=Contstants.directory_path)   
+                Contstants.gitHubCommit = True
+                MenuBar.Update()
         else:
             messagebox.showwarning("GitHub control", "Bad password")
         
@@ -354,6 +359,8 @@ class GitHub:
 
     def Push():
         Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
+        Contstants.gitHubCommit = False
+        MenuBar.Update()
     
 class Others:
 
@@ -396,7 +403,7 @@ class Others:
         print(result.stderr)
 
 class MenuBar:
-
+    
     root = Contstants.root 
     
 
@@ -418,7 +425,6 @@ class MenuBar:
     settings_menu.add_cascade(label="Hub name", menu=hub_name_submenu)
 
     settings_menu.add_command(label="Demo file", command=Settings.DemoFileSettings)
-    settings_menu.add_command(label="Github", command=Settings.SetGithub)
     menu_bar.add_cascade(label="Settings", menu=settings_menu)
     root.config(menu=menu_bar)
     #
@@ -443,6 +449,21 @@ class MenuBar:
     rides_menu.add_command(label="Yellow", command=Rides.Yellow)
     rides_menu.add_command(label="Purlple", command=Rides.Purple)
     rides_menu.add_command(label="Pink", command=Rides.Pink)
+
+    file_list_frame = Contstants.file_list_frame
+
+    text1 = Label(file_list_frame, text=Contstants.hubName)
+    text2 = Label(file_list_frame, text="nothing commited")
+            
+    def Update():
+        MenuBar.text1.config(text=Contstants.hubName)
+
+        if Contstants.gitHubCommit:
+            text = "COMMITED"
+        else:
+            text = "nothing commited"
+
+        MenuBar.text2.config(text=text)
 
 class ButtonActions:
 
@@ -535,8 +556,7 @@ img_tk = ImageTk.PhotoImage(img)
 # Otevření okna s obrázkem
 background_color = img.getpixel((0, 0))
 
-file_list_frame = tk.Frame(root, bg="#2d2d2d", width=100)
-file_list_frame.pack(side=tk.LEFT, fill=tk.Y)
+file_list_frame = Contstants.file_list_frame
 
 # Listbox for files
 file_list = tk.Listbox(file_list_frame, bg="#333333", fg="white", selectbackground="#444444")
@@ -546,16 +566,24 @@ file_list.pack(fill=tk.BOTH, expand=True)
 current_file = None
 editArea = Contstants.editArea
 
+
+
 # Add buttons below the file_list
+
+
+
 button1 = tk.Button(file_list_frame, text="Commit message", command=GitHub.GetCommit)
 button2 = tk.Button(file_list_frame, text="Pull", command=GitHub.Pull)
 button3 = tk.Button(file_list_frame, text="Push", command=GitHub.Push)
 button4 = tk.Button(file_list_frame, text="Button 4", command=Window)
 
+MenuBar.text1.pack(fill=tk.X, padx=5, pady=2)
+MenuBar.text2.pack(fill=tk.X, padx=5, pady=2)
 button1.pack(fill=tk.X, padx=5, pady=2)
 button2.pack(fill=tk.X, padx=5, pady=2)
 button3.pack(fill=tk.X, padx=5, pady=2)
 button4.pack(fill=tk.X, padx=5, pady=2)
+
 
 Files.load_files(Contstants.directory_path)
 
