@@ -1,3 +1,0 @@
-([('Gravel',
-   '/Users/antoninsiska/Documents/Gravel-app/app/dist/Gravel',
-   'EXECUTABLE')],)

@@ -11,6 +11,7 @@ from tkhtmlview import HTMLLabel
 from tkinter import messagebox as mbox
 
 class TextFormating:
+    
     def search_re(pattern, text, groupid=0):
         matches = []
         text = text.splitlines()
@@ -31,14 +32,14 @@ class Contstants:
 
     hubName = "HUB_FLL08"
     pybrikcsDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
-    fileName = "main.py"
-    specific_file_names = ["main.py"]
+    fileName = "demo.py"
+    specific_file_names = ["demo.py"]
     githubString = "Off"
-    directory_path = "/Users/antoninsiska/Documents/3D/"
+    directory_path = "/Users/antoninsiska/Documents/fll/"
     
 
     rides = {
-        "Red": "None",
+        "Red": "demo.py",
         "Green": "None",
         "Black": "None",
         "Pink": "None",
@@ -401,6 +402,8 @@ class MenuBar:
     menu_bar.add_cascade(label="Settings", menu=settings_menu)
     root.config(menu=menu_bar)
 
+    hub_name_submenu = Menu()
+
     controls_menu = Menu(menu_bar, tearoff=1)
     menu_bar.add_cascade(label="Control", menu=controls_menu)
     controls_menu.add_command(label="Upload and run", command=Others.execute)
@@ -435,8 +438,6 @@ class ButtonActions:
 
     def button4_action():
         messagebox.showinfo("Button 4", "Button 4 was clicked!")
-
-
 
 class Window:
     def __init__(self, master=None):
