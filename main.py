@@ -323,17 +323,24 @@ class Settings:
         else:
             return False
 
+    def SetDeafult1():
+        Contstants.hubName = "HUB_FLL08"
+
+    def SetDeafult2():
+        Contstants.hubName = "HUB_FLL07"
+
 class GitHub:
 
    
 
     def GetCommit():
-        githubBool = Settings.SetGithub(ask=False)
+        githubBool = True
         if githubBool:
-            commit = simpledialog.askstring("Commit message", "Enter commit message:")
-            Others.VerifyCommand(["git", "add", "."], cwd=Contstants.directory_path)
-            Others.VerifyCommand(['git', 'commit', '-m', commit], cwd=Contstants.directory_path)
-            Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
+            a = messagebox.askquestion("GitHub", "Opravdu cheš vytvořit commit a nahrát ho na GitHub")
+            if a == "yes":
+                commit = simpledialog.askstring("Commit message", "Enter commit message:")
+                Others.VerifyCommand(["git", "add", "."], cwd=Contstants.directory_path)
+                Others.VerifyCommand(['git', 'commit', '-m', commit], cwd=Contstants.directory_path)   
         else:
             messagebox.showwarning("GitHub control", "Bad password")
         
@@ -344,6 +351,9 @@ class GitHub:
             Others.VerifyCommand(['git', 'pull'])
         else:
             messagebox.showwarning("GitHub control", "Bad password")
+
+    def Push():
+        Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
     
 class Others:
 
@@ -387,22 +397,32 @@ class Others:
 
 class MenuBar:
 
-    root = Contstants.root
+    root = Contstants.root 
+    
 
     # Setup Menu Bar
     menu_bar = Menu(root)
     settings_menu = Menu(menu_bar, tearoff=0)
+
+     # Nastavení submenu pro Hub name
+    hub_name_submenu = Menu(settings_menu, tearoff=5)
+    hub_name_submenu.add_command(label="HUB_FLL_08", command=Settings.SetDeafult1)
+    hub_name_submenu.add_command(label="HUB_FLL_07", command=Settings.SetDeafult2)
+        
+
     settings_menu.add_command(label="Edit Directory Path", command=Settings.open_settings)
     settings_menu.add_command(label="Edit Specific File Names", command=Settings.open_settings)
     settings_menu.add_command(label="Pybricks directory", command=Settings.PybricksDirectorySettigns)
     settings_menu.add_command(label="Image directory", command=Settings.ImageDirectorySettings)
-    settings_menu.add_command(label="Hub name", command=Settings.HubNameSettings)
+
+    settings_menu.add_cascade(label="Hub name", menu=hub_name_submenu)
+
     settings_menu.add_command(label="Demo file", command=Settings.DemoFileSettings)
     settings_menu.add_command(label="Github", command=Settings.SetGithub)
     menu_bar.add_cascade(label="Settings", menu=settings_menu)
     root.config(menu=menu_bar)
-
-    hub_name_submenu = Menu()
+    #
+    
 
     controls_menu = Menu(menu_bar, tearoff=1)
     menu_bar.add_cascade(label="Control", menu=controls_menu)
@@ -529,7 +549,7 @@ editArea = Contstants.editArea
 # Add buttons below the file_list
 button1 = tk.Button(file_list_frame, text="Commit message", command=GitHub.GetCommit)
 button2 = tk.Button(file_list_frame, text="Pull", command=GitHub.Pull)
-button3 = tk.Button(file_list_frame, text="Get info")
+button3 = tk.Button(file_list_frame, text="Push", command=GitHub.Push)
 button4 = tk.Button(file_list_frame, text="Button 4", command=Window)
 
 button1.pack(fill=tk.X, padx=5, pady=2)
