@@ -9,10 +9,20 @@ from PIL import Image, ImageTk
 from markdown2 import Markdown
 from tkhtmlview import HTMLLabel
 from tkinter import messagebox as mbox
+import sv_ttk
+from tklinenums import TkLineNumbers
+
+first = True
 
 class TextFormating:
     
+    
+    
+        
+            
     def search_re(pattern, text, groupid=0):
+        
+
         matches = []
         text = text.splitlines()
         for i, line in enumerate(text):
@@ -23,14 +33,16 @@ class TextFormating:
         return matches
 
     def rgb(rgb):
-        return "#%02x%02x%02x" % rgb
-    
+        return "#%02x%02x%02x" % rgb  
 class Contstants:
 
 
     root = Tk()
 
     gitHubCommit = False
+
+    
+    
 
     hubName = "HUB_FLL08"
     pybrikcsDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
@@ -101,9 +113,17 @@ class Contstants:
     root.grid_rowconfigure(0, weight=1)
 
 
-    file_list_frame = tk.Frame(root, bg="#2d2d2d", width=100)
-    file_list_frame.pack(side=tk.LEFT, fill=tk.Y)
+    
+    
 
+    file_list_frame = tk.Frame(root, bg="#2d2d2d")
+    file_list_frame.pack(side=tk.LEFT, fill=tk.Y, expand=1)
+
+   
+    line_count = 0
+    
+    yes = True
+    
 class Map:
     def __init__(self):
         pass
@@ -185,6 +205,7 @@ class Files:
                     content = file.read()
                     editArea.delete('1.0', END)
                     editArea.insert('1.0', content)
+                    
             except Exception as e:
                 messagebox.showerror("Chyba", f"Soubor nelze otevřít: {e}")
 
@@ -195,17 +216,18 @@ class Files:
         if file_list.curselection():
             selected_file = file_list.get(file_list.curselection())
             file_path = os.path.join(Contstants.directory_path, selected_file)
-            try:
-                with open(file_path, "r") as file:
-                    content = file.read()
-                    editArea.delete('1.0', END)
-                    editArea.insert('1.0', content)
-                    current_file = file_path
-                    global previousText
-                    previousText = content
-                    Files.changes()
-            except Exception as e:
-                messagebox.showerror("Error", f"Could not load file: {e}")
+            #try:
+            with open(file_path, "r") as file:
+                content = file.read()
+                editArea.delete('1.0', END)
+                editArea.insert('1.0', content)
+                current_file = file_path
+                global previousText
+                previousText = content
+                Files.changes()
+                
+            #except Exception as e:
+                #messagebox.showerror("Error", f"Could not load file: {e}")
         else:
             messagebox.showwarning("Warning", "No file selected.")
 
@@ -232,9 +254,14 @@ class Files:
         messagebox.showinfo("Info", "Soubor se uložil")
 
 
-
+    last_line = 0
+    previousText = Contstants.editArea.get('1.0', END) 
     def changes(event=None):
         global previousText
+        global last_line
+
+        
+  
         editArea = Contstants.editArea
         if editArea.get('1.0', END) == previousText:
             return
@@ -251,6 +278,7 @@ class Files:
 
         previousText = editArea.get('1.0', END) 
 
+    
 class Rides:
 
     def Red():
@@ -365,7 +393,12 @@ class GitHub:
     
 class Others:
 
-    
+    def SetYesT(event = False):
+        Contstants.yes = True
+        
+    def SetYesF(event = False):
+        Contstants.yes = False
+        print("False")
 
     def execute(event=None):
         global current_file
@@ -374,8 +407,8 @@ class Others:
         fileName = Contstants.fileName
 
         messagebox.showinfo("Info", "Program se po kliknutí na OK nahraje a spustí.")
-
-        if current_file:
+        upload = messagebox.askquestion("Info", "Opravdu chceš nahrát program do robota")
+        if current_file and upload == "yes":
             with open(current_file, 'w', encoding='utf-8') as f:
                 f.write(editArea.get('1.0', END))
             
@@ -480,6 +513,8 @@ class ButtonActions:
     def button4_action():
         messagebox.showinfo("Button 4", "Button 4 was clicked!")
 
+   
+
 class Window:
     def __init__(self, master=None):
         self.rootMD = Toplevel(master)
@@ -542,9 +577,10 @@ class Window:
             except:
                 mbox.showerror("Error Saving File", "Oops!, The File: {} cannot be saved!".format(savefilename))
 
+    
 # Nastavení Tkinter
 root = Contstants.root
-root.geometry('1000x1000')
+root.geometry('1100x1000')
 root.title("Gravel")
 
 image_path = Contstants.image_path
@@ -560,12 +596,12 @@ file_list_frame = Contstants.file_list_frame
 
 # Listbox for files
 file_list = tk.Listbox(file_list_frame, bg="#333333", fg="white", selectbackground="#444444")
-file_list.pack(fill=tk.BOTH, expand=True)
+file_list.pack(fill=tk.BOTH, expand=1)
 
 # Variable to track the currently opened file
 current_file = None
 editArea = Contstants.editArea
-
+print("yview", editArea.yview())
 
 
 # Add buttons below the file_list
@@ -575,6 +611,9 @@ button3 = tk.Button(file_list_frame, text="Push", command=GitHub.Push)
 button4 = tk.Button(file_list_frame, text="Markdown editor", command=Window)
 button5 = tk.Button(file_list_frame, text="")
 
+
+
+
 MenuBar.text1.pack(fill=tk.X, padx=5, pady=2)
 MenuBar.text2.pack(fill=tk.X, padx=5, pady=2)
 button1.pack(fill=tk.X, padx=5, pady=2)
@@ -582,12 +621,38 @@ button2.pack(fill=tk.X, padx=5, pady=2)
 button3.pack(fill=tk.X, padx=5, pady=2)
 button4.pack(fill=tk.X, padx=5, pady=2)
 
+linenums = TkLineNumbers(root, editArea, justify="center", colors=("#FFFFFF", "#292929"))
+linenums.pack(fill="y", side="left")
+
+# Redraw the line numbers when the text widget contents are modified
+editArea.bind("<<Modified>>", lambda event: root.after_idle(linenums.redraw), add=True)
+editArea.bind("<Return>", lambda event: root.after_idle(linenums.redraw), add=True)
+editArea.bind("<BackSpace>", lambda event: root.after_idle(linenums.redraw), add=True)
+
 
 Files.load_files(Contstants.directory_path)
 
 file_list.bind('<ButtonRelease-1>', Files.load_selected_file)
+
 editArea.bind('<KeyRelease>', Files.changes)
+
 root.bind('<Command-r>', Others.execute)
 root.bind('<Command-s>', Files.SaveFile)
+
+
+root.tk.call("source", "/Users/antoninsiska/Documents/Gravel-app/azure.tcl")
+root.tk.call("set_theme", "light")
+
+def change_theme():
+    # NOTE: The theme's real name is azure-<mode>
+    if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
+        # Set light theme
+        root.tk.call("set_theme", "light")
+    else:
+        # Set dark theme
+        root.tk.call("set_theme", "dark")
+
+change_theme()
+#sv_ttk.set_theme("dark")
 
 root.mainloop()
