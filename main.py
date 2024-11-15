@@ -9,7 +9,6 @@ from PIL import Image, ImageTk
 from markdown2 import Markdown
 from tkhtmlview import HTMLLabel
 from tkinter import messagebox as mbox
-import sv_ttk
 from tklinenums import TkLineNumbers
 
 first = True
@@ -638,21 +637,5 @@ editArea.bind('<KeyRelease>', Files.changes)
 
 root.bind('<Command-r>', Others.execute)
 root.bind('<Command-s>', Files.SaveFile)
-
-
-root.tk.call("source", "/Users/antoninsiska/Documents/Gravel-app/azure.tcl")
-root.tk.call("set_theme", "light")
-
-def change_theme():
-    # NOTE: The theme's real name is azure-<mode>
-    if root.tk.call("ttk::style", "theme", "use") == "azure-dark":
-        # Set light theme
-        root.tk.call("set_theme", "light")
-    else:
-        # Set dark theme
-        root.tk.call("set_theme", "dark")
-
-change_theme()
-#sv_ttk.set_theme("dark")
 
 root.mainloop()

@@ -1,5 +1,7 @@
 # GRAVEL-APP
 **Příkaz pro vytvoření .app pomocí pyinstaller**
+**pyinstaller Gravel.spec**   
+**Nemazat Gravel.spec**     
 ## Change Log
 ### 12.11
 #### Update
@@ -26,3 +28,5 @@
 - Dodělat class
 - Pokusit se zhesčit kód a rozdělit ho na jednolivé class
 - Přidat Markdown editro pro poznámky a Readme
+## App versoin
+- 1.0.0 
