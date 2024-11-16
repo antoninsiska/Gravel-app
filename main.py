@@ -10,6 +10,7 @@ from markdown2 import Markdown
 from tkhtmlview import HTMLLabel
 from tkinter import messagebox as mbox
 from tklinenums import TkLineNumbers
+import json
 
 first = True
 
@@ -118,7 +119,8 @@ class Contstants:
     file_list_frame = tk.Frame(root, bg="#2d2d2d")
     file_list_frame.pack(side=tk.LEFT, fill=tk.Y, expand=1)
 
-   
+    jsonFileName = "data.json"
+
     line_count = 0
     
     yes = True
@@ -576,7 +578,43 @@ class Window:
             except:
                 mbox.showerror("Error Saving File", "Oops!, The File: {} cannot be saved!".format(savefilename))
 
+class Json:
     
+    def Load():
+        with open(Contstants.jsonFileName, "r") as file:
+            data = json.load(file)
+
+        Contstants.hubName = data['data'][0]['hubName']
+        Contstants.pybrikcsDirectory = data['data'][0]['pybrikcsDirectory']
+        Contstants.fileName = data['data'][0]['fileName']
+        Contstants.directory_path = data['data'][0]['directoryPath']
+        Contstants.rides = data['data'][0]['rides'][0]
+        Contstants.specific_file_names = data['data'][0]['specificFileNames']
+        Contstants.image_path = data['data'][0]['imagePath']
+        
+        MenuBar.Update()
+    
+    def LoadAndTestData():
+        print("_________________")
+        print(Contstants.hubName)
+        print(Contstants.pybrikcsDirectory)
+        print(Contstants.fileName)
+        print(Contstants.directory_path)
+        print(Contstants.image_path)
+        print(Contstants.rides)
+        print(Contstants.specific_file_names)
+        print("------------------------")
+        Json.Load()
+        print(Contstants.hubName)
+        print(Contstants.pybrikcsDirectory)
+        print(Contstants.fileName)
+        print(Contstants.directory_path)
+        print(Contstants.image_path)
+        print(Contstants.rides)
+        print(Contstants.specific_file_names)
+        print("------------------------")
+        
+Json.LoadAndTestData()
 # Nastavení Tkinter
 root = Contstants.root
 root.geometry('1100x1000')
@@ -588,6 +626,7 @@ img = Image.open(image_path)
 img = img.resize((1000, 600))
 img_tk = ImageTk.PhotoImage(img)
 
+# 
 # Otevření okna s obrázkem
 background_color = img.getpixel((0, 0))
 

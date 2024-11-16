@@ -1,0 +1,26 @@
+{
+    "data": [
+        {
+            "hubName": "test",
+            "pybrikcsDirectory": "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev",
+            "fileName": "main.py",
+            "directoryPath": "/Users/antoninsiska/Documents/fll/",
+            
+            "imagePath": "/Users/antoninsiska/Documents/Gravel-app/image.jpeg",
+            "specificFileNames": ["demo.py", "main.py", "menu.py"],
+            "rides": [
+                {
+                    "Red": "None",
+                    "Green": "None",
+                    "Black": "None",
+                    "Pink": "None",
+                    "Purple": "None",
+                    "Yellow": "None",
+                    "Blue": "None"
+                }
+            ],
+
+            "font": "Consolas 15"
+        }
+    ]
+}
