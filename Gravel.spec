@@ -41,6 +41,5 @@ app = BUNDLE(
     exe,
     name='Gravel.app',
     icon='./myicon.ico',
-    bundle_identifier='com.ja.Gravel',
-    version = '1.0.0'
+    version = '1.1.0'
 )

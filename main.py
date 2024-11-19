@@ -11,6 +11,10 @@ from tkhtmlview import HTMLLabel
 from tkinter import messagebox as mbox
 from tklinenums import TkLineNumbers
 import json
+from tkinter.scrolledtext import ScrolledText
+import threading
+import asyncio
+
 
 first = True
 
@@ -226,6 +230,7 @@ class Files:
                 global previousText
                 previousText = content
                 Files.changes()
+                root.after_idle(linenums.redraw)
                 
             #except Exception as e:
                 #messagebox.showerror("Error", f"Could not load file: {e}")
@@ -350,6 +355,19 @@ class Settings:
         if newImageDirectory:
             Contstants.imageDirectory = newImageDirectory
 
+    def JsonFileDirecotry():
+        
+        # Možnost výběru demo souboru
+        json_file_path = filedialog.askopenfilename(
+        title="Select Demo File",
+        filetypes=(("JSON Files", "*.json"), ("All Files", "*.*")),
+        initialdir=Contstants.jsonFileName
+    )
+        print(json_file_path)
+        if json_file_path:
+            Contstants.jsonFileName = str(json_file_path)
+            print("Vybraný soubor:", Contstants.jsonFileName)
+        
 
 
     def SetDeafult1():
@@ -394,12 +412,7 @@ class GitHub:
     
 class Others:
 
-    def SetYesT(event = False):
-        Contstants.yes = True
-        
-    def SetYesF(event = False):
-        Contstants.yes = False
-        print("False")
+    
 
     def execute(event=None):
         global current_file
@@ -437,6 +450,52 @@ class Others:
         print(result.stdout)
         print(result.stderr)
 
+
+class Json:
+    
+    def Load():
+        try:
+            with open(Contstants.jsonFileName, "r") as file:
+                data = json.load(file)
+        except:
+            messagebox.showerror("JSON file", f"Bad Json file directory: {Contstants.jsonFileName}")
+            Settings.JsonFileDirecotry()
+            Json.LoadAndTestData()
+
+        Contstants.hubName = data['data'][0]['hubName']
+        Contstants.pybrikcsDirectory = data['data'][0]['pybrikcsDirectory']
+        Contstants.fileName = data['data'][0]['fileName']
+        Contstants.directory_path = data['data'][0]['directoryPath']
+        Contstants.rides = data['data'][0]['rides'][0]
+        Contstants.specific_file_names = data['data'][0]['specificFileNames']
+        Contstants.image_path = data['data'][0]['imagePath']
+        
+        
+    
+    def LoadAndTestData(event = False):
+        print("_________________")
+        print(Contstants.hubName)
+        print(Contstants.pybrikcsDirectory)
+        print(Contstants.fileName)
+        print(Contstants.directory_path)
+        print(Contstants.image_path)
+        print(Contstants.rides)
+        print(Contstants.specific_file_names)
+        print("------------------------")
+        Json.Load()
+        MenuBar.Update()
+        Files.load_files(Contstants.directory_path)
+        print(Contstants.hubName)
+        print(Contstants.pybrikcsDirectory)
+        print(Contstants.fileName)
+        print(Contstants.directory_path)
+        print(Contstants.image_path)
+        print(Contstants.rides)
+        print(Contstants.specific_file_names)
+        print("------------------------")
+        
+
+
 class MenuBar:
     
     root = Contstants.root 
@@ -456,7 +515,7 @@ class MenuBar:
     settings_menu.add_command(label="Edit Specific File Names", command=Settings.open_settings)
     settings_menu.add_command(label="Pybricks directory", command=Settings.PybricksDirectorySettigns)
     settings_menu.add_command(label="Image directory", command=Settings.ImageDirectorySettings)
-
+    settings_menu.add_cascade(label="Set json file directory", command=Settings.JsonFileDirecotry)
     settings_menu.add_cascade(label="Hub name", menu=hub_name_submenu)
 
     settings_menu.add_command(label="Demo file", command=Settings.DemoFileSettings)
@@ -470,7 +529,9 @@ class MenuBar:
     controls_menu.add_command(label="Push", command=GitHub.Push)
     controls_menu.add_command(label="Pull", command=GitHub.Pull)
     controls_menu.add_command(label="Save", command=Files.SaveFile)
+    controls_menu.add_command(label="Reload json", command=Json.LoadAndTestData)
     controls_menu.add_command(label="Open map", command=Map.Open)
+
     
 
 
@@ -578,43 +639,60 @@ class Window:
             except:
                 mbox.showerror("Error Saving File", "Oops!, The File: {} cannot be saved!".format(savefilename))
 
-class Json:
-    
-    def Load():
-        with open(Contstants.jsonFileName, "r") as file:
-            data = json.load(file)
 
-        Contstants.hubName = data['data'][0]['hubName']
-        Contstants.pybrikcsDirectory = data['data'][0]['pybrikcsDirectory']
-        Contstants.fileName = data['data'][0]['fileName']
-        Contstants.directory_path = data['data'][0]['directoryPath']
-        Contstants.rides = data['data'][0]['rides'][0]
-        Contstants.specific_file_names = data['data'][0]['specificFileNames']
-        Contstants.image_path = data['data'][0]['imagePath']
-        
-        MenuBar.Update()
+class CommandRunnerApp:
+    def __init__(self, root, command="ping -c 4 google.com"):
+        self.root = root  # Předaný hlavní root pro integraci
+        self.loop = asyncio.new_event_loop()  # Nová asyncio smyčka
+        self.command = command  # Přednastavený příkaz
+
+        # Spustí asyncio smyčku v samostatném vlákně
+        self.thread = threading.Thread(target=self.start_asyncio_loop, args=(self.loop,), daemon=True)
+        self.thread.start()
+
+        # Automatické spuštění příkazu po spuštění aplikace
+        self.open_new_window(self.command)
+
+    def open_new_window(self, command):
+        # Vytvoření nového okna pro zobrazení výstupu příkazu
+        new_window = tk.Toplevel(self.root)
+        new_window.title(f"Command: {command}")
+
+        output_widget = ScrolledText(new_window, height=20, width=80)
+        output_widget.pack(padx=10, pady=10)
+
+        # Spuštění příkazu asynchronně
+        self.start_command(command, output_widget)
+
+    def start_command(self, command, output_widget):
+        # Spuštění příkazu v asyncio smyčce
+        asyncio.run_coroutine_threadsafe(self.run_command(command, output_widget), self.loop)
+
+    async def run_command(self, command, output_widget):
+        process = await asyncio.create_subprocess_shell(
+            command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        # Čtení výstupu
+        while True:
+            line = await process.stdout.readline()
+            if not line:
+                break
+            output_widget.insert(tk.END, line.decode())
+            output_widget.see(tk.END)
+
+        await process.wait()
+        output_widget.insert(tk.END, f"\nProcess finished with code {process.returncode}\n")
+
+    def start_asyncio_loop(self, loop):
+        # Spuštění asyncio smyčky
+        asyncio.set_event_loop(loop)
+        loop.run_forever()
+
     
-    def LoadAndTestData():
-        print("_________________")
-        print(Contstants.hubName)
-        print(Contstants.pybrikcsDirectory)
-        print(Contstants.fileName)
-        print(Contstants.directory_path)
-        print(Contstants.image_path)
-        print(Contstants.rides)
-        print(Contstants.specific_file_names)
-        print("------------------------")
-        Json.Load()
-        print(Contstants.hubName)
-        print(Contstants.pybrikcsDirectory)
-        print(Contstants.fileName)
-        print(Contstants.directory_path)
-        print(Contstants.image_path)
-        print(Contstants.rides)
-        print(Contstants.specific_file_names)
-        print("------------------------")
-        
-Json.LoadAndTestData()
+
 # Nastavení Tkinter
 root = Contstants.root
 root.geometry('1100x1000')
@@ -650,8 +728,6 @@ button4 = tk.Button(file_list_frame, text="Markdown editor", command=Window)
 button5 = tk.Button(file_list_frame, text="")
 
 
-
-
 MenuBar.text1.pack(fill=tk.X, padx=5, pady=2)
 MenuBar.text2.pack(fill=tk.X, padx=5, pady=2)
 button1.pack(fill=tk.X, padx=5, pady=2)
@@ -676,5 +752,9 @@ editArea.bind('<KeyRelease>', Files.changes)
 
 root.bind('<Command-r>', Others.execute)
 root.bind('<Command-s>', Files.SaveFile)
+root.bind('<Command-l>', Json.LoadAndTestData)
+
+CommandRunnerApp(root, command="ping -c 4 google.com")  # Přednastavený příkaz
+
 
 root.mainloop()
