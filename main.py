@@ -409,7 +409,56 @@ class GitHub:
             Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
             Contstants.gitHubCommit = False
             MenuBar.Update()
-    
+class CommandRunnerApp:
+    def __init__(self, root, command="ping -c 4 google.com"):
+        self.root = root  # Předaný hlavní root pro integraci
+        self.loop = asyncio.new_event_loop()  # Nová asyncio smyčka
+        self.command = command  # Přednastavený příkaz
+
+        # Spustí asyncio smyčku v samostatném vlákně
+        self.thread = threading.Thread(target=self.start_asyncio_loop, args=(self.loop,), daemon=True)
+        self.thread.start()
+
+        # Automatické spuštění příkazu po spuštění aplikace
+        self.open_new_window(self.command)
+
+    def open_new_window(self, command):
+        # Vytvoření nového okna pro zobrazení výstupu příkazu
+        new_window = tk.Toplevel(self.root)
+        new_window.title(f"Command: {command}")
+
+        output_widget = ScrolledText(new_window, height=20, width=80)
+        output_widget.pack(padx=10, pady=10)
+
+        # Spuštění příkazu asynchronně
+        self.start_command(command, output_widget)
+
+    def start_command(self, command, output_widget):
+        # Spuštění příkazu v asyncio smyčce
+        asyncio.run_coroutine_threadsafe(self.run_command(command, output_widget), self.loop)
+
+    async def run_command(self, command, output_widget):
+        process = await asyncio.create_subprocess_shell(
+            command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        # Čtení výstupu
+        while True:
+            line = await process.stdout.readline()
+            if not line:
+                break
+            output_widget.insert(tk.END, line.decode())
+            output_widget.see(tk.END)
+
+        await process.wait()
+        output_widget.insert(tk.END, f"\nProcess finished with code {process.returncode}\n")
+
+    def start_asyncio_loop(self, loop):
+        # Spuštění asyncio smyčky
+        asyncio.set_event_loop(loop)
+        loop.run_forever()   
 class Others:
 
     
@@ -420,15 +469,17 @@ class Others:
         pybrikcsDirectory = Contstants.pybrikcsDirectory
         fileName = Contstants.fileName
 
+         
+
         messagebox.showinfo("Info", "Program se po kliknutí na OK nahraje a spustí.")
         upload = messagebox.askquestion("Info", "Opravdu chceš nahrát program do robota")
         if current_file and upload == "yes":
             with open(current_file, 'w', encoding='utf-8') as f:
                 f.write(editArea.get('1.0', END))
-            
-            Others.VerifyCommand(['sh', '-c', f'cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}'])
+            CommandRunnerApp(Contstants.root, command=f"sh -c cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}")
+            """Others.VerifyCommand(['sh', '-c', f'cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}'])
         else:
-            messagebox.showwarning("Warning", "No file opened.")
+            messagebox.showwarning("Warning", "No file opened.")"""
 
 
     def VerifyCommand(command:list, cwd=None):
@@ -640,56 +691,7 @@ class Window:
                 mbox.showerror("Error Saving File", "Oops!, The File: {} cannot be saved!".format(savefilename))
 
 
-class CommandRunnerApp:
-    def __init__(self, root, command="ping -c 4 google.com"):
-        self.root = root  # Předaný hlavní root pro integraci
-        self.loop = asyncio.new_event_loop()  # Nová asyncio smyčka
-        self.command = command  # Přednastavený příkaz
 
-        # Spustí asyncio smyčku v samostatném vlákně
-        self.thread = threading.Thread(target=self.start_asyncio_loop, args=(self.loop,), daemon=True)
-        self.thread.start()
-
-        # Automatické spuštění příkazu po spuštění aplikace
-        self.open_new_window(self.command)
-
-    def open_new_window(self, command):
-        # Vytvoření nového okna pro zobrazení výstupu příkazu
-        new_window = tk.Toplevel(self.root)
-        new_window.title(f"Command: {command}")
-
-        output_widget = ScrolledText(new_window, height=20, width=80)
-        output_widget.pack(padx=10, pady=10)
-
-        # Spuštění příkazu asynchronně
-        self.start_command(command, output_widget)
-
-    def start_command(self, command, output_widget):
-        # Spuštění příkazu v asyncio smyčce
-        asyncio.run_coroutine_threadsafe(self.run_command(command, output_widget), self.loop)
-
-    async def run_command(self, command, output_widget):
-        process = await asyncio.create_subprocess_shell(
-            command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-
-        # Čtení výstupu
-        while True:
-            line = await process.stdout.readline()
-            if not line:
-                break
-            output_widget.insert(tk.END, line.decode())
-            output_widget.see(tk.END)
-
-        await process.wait()
-        output_widget.insert(tk.END, f"\nProcess finished with code {process.returncode}\n")
-
-    def start_asyncio_loop(self, loop):
-        # Spuštění asyncio smyčky
-        asyncio.set_event_loop(loop)
-        loop.run_forever()
 
     
 
@@ -754,7 +756,7 @@ root.bind('<Command-r>', Others.execute)
 root.bind('<Command-s>', Files.SaveFile)
 root.bind('<Command-l>', Json.LoadAndTestData)
 
-CommandRunnerApp(root, command="ping -c 4 google.com")  # Přednastavený příkaz
+  # Přednastavený příkaz
 
 
 root.mainloop()
