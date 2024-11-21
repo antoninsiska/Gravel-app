@@ -418,9 +418,6 @@ class GitHub:
             Contstants.gitHubCommit = False
             MenuBar.Update()
 
-
-
-
 class CMDViewer:
     def __init__(self, root, command):
         self.root = root
