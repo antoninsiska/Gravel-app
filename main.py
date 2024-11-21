@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import messagebox, Listbox, simpledialog, font, filedialog
 import tkinter as tk
+from tkinter.ttk import Progressbar
+from collections import deque
 import re
 import os
 import subprocess
@@ -38,6 +40,12 @@ class TextFormating:
 
     def rgb(rgb):
         return "#%02x%02x%02x" % rgb  
+    
+    def InstertTab(event=False):
+        cursor_position = Contstants.editArea.index("insert")  # Zjistí pozici kurzoru
+        Contstants.editArea.insert(cursor_position, "    ")  # Vloží text na tuto pozici
+        return "break"
+    
 class Contstants:
 
 
@@ -204,7 +212,7 @@ class Files:
         if filename == "None" or filename == None:
             messagebox.showerror("No file", "You havent set any file")
         else:
-            file_path = os.path.join(directory_path, filename)
+            file_path = os.path.join(Contstants.directory_path, filename)
             try:
                 with open(file_path, "r") as file:
                     content = file.read()
@@ -355,7 +363,7 @@ class Settings:
         if newImageDirectory:
             Contstants.imageDirectory = newImageDirectory
 
-    def JsonFileDirecotry():
+    def JsonFileDirecotry(event=False):
         
         # Možnost výběru demo souboru
         json_file_path = filedialog.askopenfilename(
@@ -409,32 +417,38 @@ class GitHub:
             Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
             Contstants.gitHubCommit = False
             MenuBar.Update()
-class CommandRunnerApp:
-    def __init__(self, root, command="ping -c 4 google.com"):
-        self.root = root  # Předaný hlavní root pro integraci
-        self.loop = asyncio.new_event_loop()  # Nová asyncio smyčka
-        self.command = command  # Přednastavený příkaz
+
+
+
+
+class CMDViewer:
+    def __init__(self, root, command):
+        self.root = root
+        self.loop = asyncio.new_event_loop()
+        self.command = command
+
+        # Uchování posledních tří řádků výstupu
+        self.last_lines = deque(maxlen=3)
 
         # Spustí asyncio smyčku v samostatném vlákně
         self.thread = threading.Thread(target=self.start_asyncio_loop, args=(self.loop,), daemon=True)
         self.thread.start()
 
-        # Automatické spuštění příkazu po spuštění aplikace
+        # Automatické spuštění příkazu
         self.open_new_window(self.command)
 
     def open_new_window(self, command):
-        # Vytvoření nového okna pro zobrazení výstupu příkazu
-        new_window = tk.Toplevel(self.root)
-        new_window.title(f"Command: {command}")
+        # Vytvoření nového okna
+        self.new_window = tk.Toplevel(self.root)
+        self.new_window.title(f"Command: {command}")
 
-        output_widget = ScrolledText(new_window, height=20, width=80)
-        output_widget.pack(padx=10, pady=10)
+        self.output_widget = ScrolledText(self.new_window, height=20, width=80)
+        self.output_widget.pack(padx=10, pady=10)
 
         # Spuštění příkazu asynchronně
-        self.start_command(command, output_widget)
+        self.start_command(command, self.output_widget)
 
     def start_command(self, command, output_widget):
-        # Spuštění příkazu v asyncio smyčce
         asyncio.run_coroutine_threadsafe(self.run_command(command, output_widget), self.loop)
 
     async def run_command(self, command, output_widget):
@@ -444,21 +458,54 @@ class CommandRunnerApp:
             stderr=asyncio.subprocess.PIPE
         )
 
-        # Čtení výstupu
-        while True:
-            line = await process.stdout.readline()
-            if not line:
-                break
-            output_widget.insert(tk.END, line.decode())
-            output_widget.see(tk.END)
+        async def read_stream(stream, tag):
+            while True:
+                data = await stream.read(256)
+                if not data:
+                    break
+                text = data.decode()
+
+                # Ukládání posledních tří řádků do textového okna
+                self.root.after(0, self.append_output, output_widget, text)
+
+        # Spuštění čtení stdout a stderr současně
+        await asyncio.gather(
+            read_stream(process.stdout, "stdout"),
+            read_stream(process.stderr, "stderr")
+        )
 
         await process.wait()
-        output_widget.insert(tk.END, f"\nProcess finished with code {process.returncode}\n")
+
+        # Zavření okna a zobrazení analýzy posledních řádků
+        self.root.after(1000, self.analyze_and_show_last_lines)
+
+    def append_output(self, output_widget, text):
+        output_widget.insert(tk.END, text)
+        output_widget.see(tk.END)
+        # Uchováme poslední řádky pro analýzu
+        self.last_lines.append(text.strip())
+
+    def analyze_and_show_last_lines(self):
+        # Analýza posledních tří řádků
+        last_output = "\n".join(self.last_lines)
+
+        # Pokud se objeví traceback (chyba), zobrazíme poslední tři řádky
+        if any("Traceback (most recent call last)" in line for line in self.last_lines):
+            messagebox.showerror("Error Detected", f"Error occurred:\n\n{last_output}")
+        elif "SystemExit" in last_output:
+            # Pokud je SystemExit, zobrazíme pouze poslední řádek
+            messagebox.showinfo("Program Stopped", f"Program finished with SystemExit:\n\n{self.last_lines[-1]}")
+        elif self.last_lines:
+            # Pokud není chyba, zobrazíme poslední řádek
+            messagebox.showinfo("Program Stopped", f"Program finished:\n\n{self.last_lines[-1]}")
+
+        # Zavření okna po zobrazení hlášení
+        self.new_window.after(1000, self.new_window.destroy)
 
     def start_asyncio_loop(self, loop):
-        # Spuštění asyncio smyčky
         asyncio.set_event_loop(loop)
-        loop.run_forever()   
+        loop.run_forever()
+
 class Others:
 
     
@@ -476,7 +523,11 @@ class Others:
         if current_file and upload == "yes":
             with open(current_file, 'w', encoding='utf-8') as f:
                 f.write(editArea.get('1.0', END))
-            CommandRunnerApp(Contstants.root, command=f"sh -c cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}")
+            print("{", Contstants.directory_path)
+            print("{", Contstants.hubName)
+            print("{", Contstants.fileName)
+            CMDViewer(Contstants.root, command=f"cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}")
+
             """Others.VerifyCommand(['sh', '-c', f'cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}'])
         else:
             messagebox.showwarning("Warning", "No file opened.")"""
@@ -547,6 +598,8 @@ class Json:
         
 
 
+        
+
 class MenuBar:
     
     root = Contstants.root 
@@ -612,7 +665,8 @@ class MenuBar:
         MenuBar.text2.config(text=text)
 
 class ButtonActions:
-
+    def __init__(self):
+        self.rides = Contstants.rides
     # Define button actions
     def button1_action():
         messagebox.showinfo("Button 1", "Button 1 was clicked!")
@@ -625,8 +679,18 @@ class ButtonActions:
 
     def button4_action():
         messagebox.showinfo("Button 4", "Button 4 was clicked!")
+    
+    def OpenRed(event=False):
+        Files.open_specific_file(filename=Contstants.rides["Red"])
+        Files.changes()
 
-   
+    def OpenGreen(event=False):
+        Files.open_specific_file(filename=Contstants.rides["Green"])
+        Files.changes()
+
+    def OpenBlue(event=False):
+        Files.open_specific_file(filename=Contstants.rides["Blue"])
+        Files.changes()
 
 class Window:
     def __init__(self, master=None):
@@ -690,7 +754,13 @@ class Window:
             except:
                 mbox.showerror("Error Saving File", "Oops!, The File: {} cannot be saved!".format(savefilename))
 
+class ToolBox:
 
+    def OpenWindow(event=False):
+        root = Toplevel(Contstants.root)
+        root.geometry("200x50")
+        btn1 = tk.Button(root, text="Green", command=ButtonActions.OpenGreen)
+        btn1.pack(padx=5, pady=5)
 
 
     
@@ -721,10 +791,10 @@ current_file = None
 editArea = Contstants.editArea
 print("yview", editArea.yview())
 
-
+ToolBox.OpenWindow()
 # Add buttons below the file_list
 button1 = tk.Button(file_list_frame, text="Commit message", command=GitHub.GetCommit)
-button2 = tk.Button(file_list_frame, text="Pull", command=GitHub.Pull)
+button2 = tk.Button(file_list_frame, text="Toolbox", command=ToolBox.OpenWindow)
 button3 = tk.Button(file_list_frame, text="Push", command=GitHub.Push)
 button4 = tk.Button(file_list_frame, text="Markdown editor", command=Window)
 button5 = tk.Button(file_list_frame, text="")
@@ -755,6 +825,10 @@ editArea.bind('<KeyRelease>', Files.changes)
 root.bind('<Command-r>', Others.execute)
 root.bind('<Command-s>', Files.SaveFile)
 root.bind('<Command-l>', Json.LoadAndTestData)
+root.bind("<Command-g>", ButtonActions.OpenGreen)
+root.bind("<Command-b>", ButtonActions.OpenBlue)
+root.bind("<Command-j>", Settings.JsonFileDirecotry)
+editArea.bind("<Tab>", TextFormating.InstertTab)
 
   # Přednastavený příkaz
 
