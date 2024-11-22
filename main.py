@@ -21,11 +21,7 @@ import asyncio
 first = True
 
 class TextFormating:
-    
-    
-    
-        
-            
+         
     def search_re(pattern, text, groupid=0):
         
 
@@ -46,6 +42,20 @@ class TextFormating:
         Contstants.editArea.insert(cursor_position, "    ")  # Vloží text na tuto pozici
         return "break"
     
+    def DeleteLine(event):
+        # Zjistí aktuální pozici kurzoru
+        cursor_position = Contstants.editArea.index("insert")
+        # Zjistí začátek aktuálního řádku
+        line_start = Contstants.editArea.index(f"{cursor_position.split('.')[0]}.0")
+        # Smaže od začátku řádku až po kurzor
+        Contstants.editArea.delete(line_start, cursor_position)
+        return "break"  # Zabrání standardní akci klávesy
+
+    def Undo(event=False):
+        try:
+            Contstants.editArea.edit_undo()  # Provede zpětnou akci
+        except tk.TclError:
+            pass
 class Contstants:
 
 
@@ -94,12 +104,13 @@ class Contstants:
     # Define a list of Regex Patterns that should be colored in a certain way
     repl = [
         ['(^| )(False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)($| )', keywords],
-        ['".*?"', string],
-        ['\'.*?\'', string],
-        ['#.*?$', comments],
         ['Straight|Turn|Curve|TurnTool|GoTo|GetXY|InitialValue|SmoothTurn|Tool', commands],
         ["1|2|3|4|5|6|7|8|9|0|True|False", nums],
-        ["last", lastColour]
+        ["last", lastColour],
+        ['".*?"', string],
+        ['\'.*?\'', string],
+        ['"""', string],
+        ['#.*?$', comments],
     ]
 
     # Make the Text Widget
@@ -110,7 +121,8 @@ class Contstants:
         insertbackground=normal,
         relief=FLAT,
         borderwidth=30,
-        font=font
+        font=font,
+        undo=True
     )
     editArea.pack(fill=BOTH, expand=1)
 
@@ -218,6 +230,7 @@ class Files:
                     content = file.read()
                     editArea.delete('1.0', END)
                     editArea.insert('1.0', content)
+                    editArea.edit_reset()
                     
             except Exception as e:
                 messagebox.showerror("Chyba", f"Soubor nelze otevřít: {e}")
@@ -239,6 +252,7 @@ class Files:
                 previousText = content
                 Files.changes()
                 root.after_idle(linenums.redraw)
+                editArea.edit_reset()
                 
             #except Exception as e:
                 #messagebox.showerror("Error", f"Could not load file: {e}")
@@ -825,6 +839,8 @@ root.bind('<Command-l>', Json.LoadAndTestData)
 root.bind("<Command-g>", ButtonActions.OpenGreen)
 root.bind("<Command-b>", ButtonActions.OpenBlue)
 root.bind("<Command-j>", Settings.JsonFileDirecotry)
+editArea.bind("<Command-BackSpace>", TextFormating.DeleteLine)
+editArea.bind("<Command-z>", TextFormating.Undo)
 editArea.bind("<Tab>", TextFormating.InstertTab)
 
   # Přednastavený příkaz
