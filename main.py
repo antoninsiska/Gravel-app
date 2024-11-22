@@ -148,6 +148,8 @@ class Contstants:
     line_count = 0
     
     yes = True
+
+    saved = False
     
 class Map:
     def __init__(self):
@@ -252,6 +254,7 @@ class Files:
                 previousText = content
                 Files.changes()
                 root.after_idle(linenums.redraw)
+                Contstants.saved = True
                 editArea.edit_reset()
                 
             #except Exception as e:
@@ -275,6 +278,8 @@ class Files:
         if current_file:
             with open(current_file, 'w', encoding='utf-8') as f:
                 f.write(editArea.get('1.0', END))
+            Contstants.saved = True
+            MenuBar.Update()
             
         else:
             messagebox.showwarning("Warning", "No file opened.")
@@ -287,9 +292,11 @@ class Files:
     def changes(event=None):
         global previousText
         global last_line
-
         
-  
+        Contstants.saved = False
+
+        MenuBar.Update()
+
         editArea = Contstants.editArea
         if editArea.get('1.0', END) == previousText:
             return
@@ -664,7 +671,8 @@ class MenuBar:
 
     text1 = Label(file_list_frame, text=Contstants.hubName)
     text2 = Label(file_list_frame, text="nothing commited")
-            
+    text3 = Label(file_list_frame, text="[     ]")
+
     def Update():
         MenuBar.text1.config(text=Contstants.hubName)
 
@@ -674,6 +682,12 @@ class MenuBar:
             text = "nothing commited"
 
         MenuBar.text2.config(text=text)
+        print(Contstants.saved)
+        if Contstants.saved == True:
+            MenuBar.text3.config(text="[     ]")
+        else:
+            MenuBar.text3.config(text="[██]")
+        
 
 class ButtonActions:
     def __init__(self):
@@ -802,7 +816,6 @@ current_file = None
 editArea = Contstants.editArea
 print("yview", editArea.yview())
 
-ToolBox.OpenWindow()
 # Add buttons below the file_list
 button1 = tk.Button(file_list_frame, text="Commit message", command=GitHub.GetCommit)
 button2 = tk.Button(file_list_frame, text="Toolbox", command=ToolBox.OpenWindow)
@@ -813,6 +826,7 @@ button5 = tk.Button(file_list_frame, text="")
 
 MenuBar.text1.pack(fill=tk.X, padx=5, pady=2)
 MenuBar.text2.pack(fill=tk.X, padx=5, pady=2)
+MenuBar.text3.pack(fill=tk.X, padx=5, pady=2)
 button1.pack(fill=tk.X, padx=5, pady=2)
 button2.pack(fill=tk.X, padx=5, pady=2)
 button3.pack(fill=tk.X, padx=5, pady=2)
