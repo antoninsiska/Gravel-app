@@ -9,6 +9,7 @@ import subprocess
 from tkinter import filedialog
 from PIL import Image, ImageTk
 from markdown2 import Markdown
+import markdown
 from tkhtmlview import HTMLLabel
 from tkinter import messagebox as mbox
 from tklinenums import TkLineNumbers
@@ -16,12 +17,30 @@ import json
 from tkinter.scrolledtext import ScrolledText
 import threading
 import asyncio
-
-
+import sys
+import time
+import logging
+import objc
+from Cocoa import (
+    NSApplication,
+    NSStatusBar,
+    NSImage,
+    NSMenu,
+    NSMenuItem,
+    NSObject,
+)
+from PyObjCTools.AppHelper import runEventLoop
 first = True
 
+
+logging.basicConfig(
+    filename='/Users/antoninsiska/Documents/Projekty/Gravel-app/app.log',
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s')
+
+
 class TextFormating:
-         
+
     def search_re(pattern, text, groupid=0):
         
 
@@ -63,16 +82,18 @@ class Contstants:
 
     gitHubCommit = False
 
-    
-    
-
     hubName = "HUB_FLL08"
     pybrikcsDirectory = "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev"
     fileName = "demo.py"
     specific_file_names = ["demo.py"]
     githubString = "Off"
     directory_path = "/Users/antoninsiska/Documents/fll/"
-    
+
+    library = ["pybricks", "pybricksdev"]
+
+    libraryMissing = False
+    pythonMissing = False
+    pipMissing = False    
 
     rides = {
         "Red": "demo.py",
@@ -85,8 +106,12 @@ class Contstants:
 
     }
 
+    usrsandpass = {
+        "Tonda": "6996",
+        "Matěj": "Skibidi",
+    }
     # Načtení obrázku
-    image_path = '/Users/antoninsiska/Documents/Gravel-app/image.jpeg'
+    image_path = '/Users/antoninsiska/Documents/Projekty/Gravel-app/image.jpeg'
 
     previousText = ''
 
@@ -113,24 +138,29 @@ class Contstants:
         ['#.*?$', comments],
     ]
 
+    edit_area_frame = tk.Frame(root)
+    edit_area_frame.pack(fill=tk.Y, side=tk.RIGHT, expand=1)
+
     # Make the Text Widget
     editArea = Text(
-        root,
+        edit_area_frame,
         background=background,
         foreground=normal,
         insertbackground=normal,
         relief=FLAT,
         borderwidth=30,
         font=font,
-        undo=True
+        undo=True,
+        height=39
     )
-    editArea.pack(fill=BOTH, expand=1)
+
 
     # Vytvoření listboxu pro soubory
     
 
     # Přesunutí editArea na správné místo pomocí grid
-    editArea.pack(side=RIGHT, fill=BOTH, expand=1)
+    #editArea.pack(side=RIGHT, fill=BOTH, expand=1)
+    editArea.grid(row = 0, column = 0, sticky = W, pady = 2)
 
     # Nastavení mřížky na pružné roztažení
     root.grid_columnconfigure(1, weight=1)
@@ -143,6 +173,9 @@ class Contstants:
     file_list_frame = tk.Frame(root, bg="#2d2d2d")
     file_list_frame.pack(side=tk.LEFT, fill=tk.Y, expand=1)
 
+    file_list = tk.Listbox(file_list_frame, bg="#333333", fg="white", selectbackground="#444444")
+    file_list.pack(fill=tk.BOTH, expand=1)  
+
     jsonFileName = "data.json"
 
     line_count = 0
@@ -150,6 +183,8 @@ class Contstants:
     yes = True
 
     saved = False
+
+    
     
 class Map:
     def __init__(self):
@@ -208,6 +243,9 @@ class Files:
 
     def Open():
         global image_path, img_tk, img
+
+        logging.info("Opening file")
+
         # Druhé okno pro zobrazení obrázku
         image_window = Toplevel(root)
         image_window.geometry('1000x600')
@@ -241,8 +279,8 @@ class Files:
     def load_selected_file(event=None):
         global current_file
         editArea = Contstants.editArea
-        if file_list.curselection():
-            selected_file = file_list.get(file_list.curselection())
+        if Contstants.file_list.curselection():
+            selected_file = Contstants.file_list.get(Contstants.file_list.curselection())
             file_path = os.path.join(Contstants.directory_path, selected_file)
             #try:
             with open(file_path, "r") as file:
@@ -263,16 +301,21 @@ class Files:
             messagebox.showwarning("Warning", "No file selected.")
 
     def load_files(directory):
-        file_list.delete(0, tk.END)
+        logging.info("Loading files")
+
+        # Definice file_list
+        Contstants.file_list.delete(0, tk.END)
         try:
             for file_name in os.listdir(directory):
                 if file_name.endswith(".py") and file_name in Contstants.specific_file_names:
-                    file_list.insert(tk.END, file_name)
+                    Contstants.file_list.insert(tk.END, file_name)
         except FileNotFoundError:
             messagebox.showerror("Error", "Directory not found!")
 
 
     def SaveFile(event=None):
+        logging.info("Saving file")
+
         global current_file
         editArea = Contstants.editArea
         if current_file:
@@ -293,6 +336,8 @@ class Files:
         global previousText
         global last_line
         
+        logging.info("Checking for changes")
+
         Contstants.saved = False
 
         MenuBar.Update()
@@ -312,7 +357,6 @@ class Files:
                 i += 1
 
         previousText = editArea.get('1.0', END) 
-
     
 class Rides:
 
@@ -335,7 +379,7 @@ class Settings:
 
     def open_settings():
         global directory_path, specific_file_names, fileName
-
+        logging.info("Opening settings")
         # Možnost výběru složky
         new_directory_path = filedialog.askdirectory(title="Select Directory Path", initialdir=Contstants.directory_path)
         if new_directory_path:
@@ -356,19 +400,24 @@ class Settings:
 
     def HubNameSettings():
         global hubName
+        logging.info("Opening hub name settings")
         newHubName = simpledialog.askstring("Hub name", "Enter new hub name:", initialvalue=Contstants.hubName)
         if newHubName:
             Contstants.hubName = newHubName
         MenuBar.Update()
+        logging.info("Hub name changed")
 
     def PybricksDirectorySettigns():
         global pybricksDirectory
+        logging.info("Opening pybricks directory settings")
         newPybricksDirectory = simpledialog.askstring("Pybricks directory", "Enter pybricks directory:", initialvalue=Contstants.pybrikcsDirectory)
         if newPybricksDirectory:
             Contstants.pybrikcsDirectory = newPybricksDirectory
+        logging.info("Pybricks directory changed")
 
     def DemoFileSettings():
         global demoFileName
+        logging.info("Opening demo file settings")
         # Možnost výběru demo souboru
         demo_file_path = filedialog.askopenfilename(
             title="Select Demo File",
@@ -377,6 +426,7 @@ class Settings:
         )
         if demo_file_path:
             Contstants.fileName = os.path.basename(demo_file_path)
+        logging.info("Demo file changed")
 
     def ImageDirectorySettings():
         
@@ -386,6 +436,7 @@ class Settings:
 
     def JsonFileDirecotry(event=False):
         
+        logging.info("Opening json file directory settings")
         # Možnost výběru demo souboru
         json_file_path = filedialog.askopenfilename(
         title="Select Demo File",
@@ -396,6 +447,7 @@ class Settings:
         if json_file_path:
             Contstants.jsonFileName = str(json_file_path)
             print("Vybraný soubor:", Contstants.jsonFileName)
+        logging.info("Json file directory changed")
         
 
 
@@ -412,6 +464,7 @@ class GitHub:
    
 
     def GetCommit():
+        logging.info("Opening commit")
         githubBool = True
         if githubBool:
             a = messagebox.askquestion("GitHub", "Opravdu cheš vytvořit commit")
@@ -421,6 +474,7 @@ class GitHub:
                 Others.VerifyCommand(['git', 'commit', '-m', commit], cwd=Contstants.directory_path)   
                 Contstants.gitHubCommit = True
                 MenuBar.Update()
+                logging.info("Commit created")
      
         
 
@@ -430,6 +484,7 @@ class GitHub:
             githubBool = Settings.SetGithub(ask=False)
             if githubBool:
                 Others.VerifyCommand(['git', 'pull'])
+                logging.info("Pull created")
         
 
     def Push():
@@ -438,6 +493,7 @@ class GitHub:
             Others.VerifyCommand(['git', 'push'], cwd=Contstants.directory_path)
             Contstants.gitHubCommit = False
             MenuBar.Update()
+            logging.info("Push created")
 
 class CMDViewer:
     def __init__(self, root, command):
@@ -447,6 +503,7 @@ class CMDViewer:
 
         # Uchování posledních tří řádků výstupu
         self.last_lines = deque(maxlen=3)
+        self.output_lines = []  # List to store output lines
 
         # Spustí asyncio smyčku v samostatném vlákně
         self.thread = threading.Thread(target=self.start_asyncio_loop, args=(self.loop,), daemon=True)
@@ -456,17 +513,24 @@ class CMDViewer:
         self.open_new_window(self.command)
 
     def open_new_window(self, command):
-        # Vytvoření nového okna
-        self.new_window = tk.Toplevel(self.root)
-        self.new_window.title(f"Command: {command}")
 
-        self.output_widget = ScrolledText(self.new_window, height=20, width=80)
-        self.output_widget.pack(padx=10, pady=10)
+        logging.info(f"Opening new window for command: {command}")
+
+        # Vytvoření nového okna
+        self.new_window = Contstants.edit_area_frame
+        #self.new_window.title(f"Command: {command}")
+
+        self.output_widget = ScrolledText(self.new_window, height=26, width=120)
+        #self.output_widget.pack(padx=10, pady=10)
+        Contstants.editArea.config(height=20)
+        self.output_widget.grid(row = 1, column = 0, sticky = W, pady = 2)
+        
 
         # Spuštění příkazu asynchronně
         self.start_command(command, self.output_widget)
 
     def start_command(self, command, output_widget):
+        logging.info(f"Running command: {command}")
         asyncio.run_coroutine_threadsafe(self.run_command(command, output_widget), self.loop)
 
     async def run_command(self, command, output_widget):
@@ -498,10 +562,14 @@ class CMDViewer:
         self.root.after(1000, self.analyze_and_show_last_lines)
 
     def append_output(self, output_widget, text):
-        output_widget.insert(tk.END, text)
-        output_widget.see(tk.END)
-        # Uchováme poslední řádky pro analýzu
-        self.last_lines.append(text.strip())
+        logging.info(f"Output: {text}")
+        lines = text.splitlines()
+        for line in lines:
+            output_widget.insert(tk.END, line + '\n')
+            output_widget.see(tk.END)
+            self.output_lines.append(line)  # Append each line to the list
+            self.last_lines.append(line.strip())
+        print(self.output_lines)
 
     def analyze_and_show_last_lines(self):
         # Analýza posledních tří řádků
@@ -518,7 +586,7 @@ class CMDViewer:
             messagebox.showinfo("Program Stopped", f"Program finished:\n\n{self.last_lines[-1]}")
 
         # Zavření okna po zobrazení hlášení
-        self.new_window.after(1000, self.new_window.destroy)
+        Contstants.editArea.config(height=39)
 
     def start_asyncio_loop(self, loop):
         asyncio.set_event_loop(loop)
@@ -526,11 +594,30 @@ class CMDViewer:
 
 class Others:
 
+    def get_app_location():
+        logging.info("Getting app location")
+        if hasattr(sys, '_MEIPASS'):  # Pokud běžíte z balíčku PyInstaller
+            # Vrátí cestu k balíčku .app
+            return str(os.path.dirname(sys.executable))
+        else:
+            # Pokud aplikaci spouštíte přímo z vývojového prostředí (např. IDE)
+            return str(os.getcwd())
+    
+    def LogIn():
+        logging.info("Logging in")
+        username = simpledialog.askstring("Username", "Please enter your username:")
+        if username:
+            Contstants.jsonFileName = (Others.get_app_location()) + "/dist/Gravel.app/" + username + ".json"
+            Json.LoadAndTestData()
+        else:
+            messagebox.showwarning("Username", "No username entered.")
+
+
     
 
     def execute(event=None):
         global current_file
-
+        logging.info("Executing program")
         pybrikcsDirectory = Contstants.pybrikcsDirectory
         fileName = Contstants.fileName
 
@@ -544,7 +631,8 @@ class Others:
             print("{", Contstants.directory_path)
             print("{", Contstants.hubName)
             print("{", Contstants.fileName)
-            CMDViewer(Contstants.root, command=f"cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}")
+            CMDViewer(Contstants.editArea, command=f"cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}")
+            Contstants.editArea.grid(row = 0, column = 0, sticky = W, pady = 2)
 
             """Others.VerifyCommand(['sh', '-c', f'cd {Contstants.directory_path} && {Contstants.pybrikcsDirectory} run ble -n {Contstants.hubName} {Contstants.fileName}'])
         else:
@@ -552,6 +640,7 @@ class Others:
 
 
     def VerifyCommand(command:list, cwd=None):
+        logging.info(f"Verifying command: {command}")
         try:
             result = subprocess.run(
                         command,
@@ -570,6 +659,39 @@ class Others:
         print(result.stdout)
         print(result.stderr)
 
+    def GetLocalTime():
+        logging.info("Getting local time")
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+        return current_time
+
+class HelpWindow:
+    # Markdown text
+    def ShowMarkdown(markdown_text):
+
+
+        # Převod Markdown na HTML
+        html_text = markdown.markdown(markdown_text)
+        print(html_text)
+        # Vytvoření tkinter okna
+        root = Toplevel(Contstants.root)
+        root.title("Markdown v Tkinter")
+
+        # Zobrazení HTML pomocí HTMLLabel
+        html_label = HTMLLabel(root, html=html_text)
+        html_label.pack(fill="both", expand=True, padx=10, pady=10)
+
+    def OpenShortcutsHelp():
+        markdown_text = "- **CMD + S** - Save \n - **CMD + R** - Run - otevře okno s terminálem a uloží a nahraje program do robota \n - **CMD + P** - Push - nahraje program na GitHub \n - **CMD + J** - otvře konfiguraci s nastevním aplikace \n - **CMD + L** -  otevře okno s výběrem konfigurace pro apliakaci \n - **CMD + Z** - krok zpět"
+        HelpWindow.ShowMarkdown(markdown_text)
+
+    def OpenEssentialsHelp():
+        markdown_text = "# Základy\nAplikace složí k programování robota Gravel.\n## Programovací prostředí\nVpravo je velké textvé okno kam sepíše kód. Základní python funkce a naše všechyn funkce se zbarví jinou barvu pro lepší přehlednost. Vlevo je sloupeček rozdělen na dvě části, první část obsahuje seznam přístupných souborů. Přístupné soubory se nastavují v konfiguračním souboru. V druhé části se nachází důležité nebo základní funkce. Jsou tam tlačítka s commit message, tento nástrojvytvoří zprávu na github. Run uloží, nahraje program do robota a otvře okno terminálu s výstupem porgramu. Push nahrává zpravy na gitu na github. A markdown editor která se využije až v budoucnosti. Po zvoelní této možnosti je možné že aplikace spadne. Kousek nad talčítky je informační pás. První od spoda je ukazatel uložení soubru, pokud je to bílé tak soubor není uložen a pokud je to prázdné tak je soubor uložen. Nad tím je oznámení commitu (zda je nebo zda není). Výše je název hubu kam se bude nahrávat program. Název lze změnit v kartě settings Hub name a vybrat si. Náze lze nastavit i v konfiguračním souboru.\n## Konfigurační soubor\nKonfugrační soubr je soubr který nastavuje všechypotřebná nastvaení. Při jeho změneě hrozí narušení porgramu nebo aplikace **NEUPRAVOVAT**. Konfigurační soubor je potřeba nastavit při každém zapnutí aplikace.\n## Na co si dávat POZOR\n1. Přístup k hlavním soubrům programu by jsi neměl mít přístup díky kofiguračnímu souboru, ale pokdu by se stalo že by se k nim povedlo dostat tak zásadně neupravovat. Může stát že robot kvůli úpravě nebude jezidt nebo nebude přesně. Potom je těžké úpravu najít a upravit.\n2. Na konfigurační soubor, nikdy neupravovoat, potom apliake nemůusí fungovat správně.\n## Tipy\nV kartě help lze najít cokoliv potřebného pro aovládání aplikace."
+        HelpWindow.ShowMarkdown(markdown_text)
+
+    def OpenDocumentation():
+        markdown_text = "# Dokumentace\nToto obsahuje základní příkay potřebné pro pohyby robota\n## Straight()\nFunkce straight slouží k jízdě rovně, do závorek se píše vzdálenost v cm.\n## Turn()\nFunkce turn slouží k zatáčení, do závorek se vklládá ůhel na který se otočit\n## TurnTool()\nTrunTool slouží k pohybu motorů pro násatvce. Do závorek se vkládá úhel o kolik a rcyhlost + jakým motorem L/R v uzovkách"
+        HelpWindow.ShowMarkdown(markdown_text)
 
 class Json:
     
@@ -579,6 +701,7 @@ class Json:
                 data = json.load(file)
         except:
             messagebox.showerror("JSON file", f"Bad Json file directory: {Contstants.jsonFileName}")
+            print("Bad Json file directory")
             Settings.JsonFileDirecotry()
             Json.LoadAndTestData()
 
@@ -589,10 +712,12 @@ class Json:
         Contstants.rides = data['data'][0]['rides'][0]
         Contstants.specific_file_names = data['data'][0]['specificFileNames']
         Contstants.image_path = data['data'][0]['imagePath']
+        logging.info("Loaded json data")
         
         
     
     def LoadAndTestData(event = False):
+        
         print("_________________")
         print(Contstants.hubName)
         print(Contstants.pybrikcsDirectory)
@@ -614,10 +739,6 @@ class Json:
         print(Contstants.specific_file_names)
         print("------------------------")
         
-
-
-        
-
 class MenuBar:
     
     root = Contstants.root 
@@ -653,7 +774,7 @@ class MenuBar:
     controls_menu.add_command(label="Save", command=Files.SaveFile)
     controls_menu.add_command(label="Reload json", command=Json.LoadAndTestData)
     controls_menu.add_command(label="Open map", command=Map.Open)
-
+    controls_menu.add_command(label="Log in", command=Others.LogIn)
     
 
 
@@ -666,12 +787,21 @@ class MenuBar:
     rides_menu.add_command(label="Yellow", command=Rides.Yellow)
     rides_menu.add_command(label="Purlple", command=Rides.Purple)
     rides_menu.add_command(label="Pink", command=Rides.Pink)
+    
+    help_menu = Menu(menu_bar, tearoff=3)
+    menu_bar.add_cascade(label="Help", menu=help_menu)
+    help_menu.add_command(label="Essentials", command=HelpWindow.OpenEssentialsHelp)
+    help_menu.add_command(label="Keyboard shortcuts", command=HelpWindow.OpenShortcutsHelp)
+    help_menu.add_command(label="Documentation", command=HelpWindow.OpenDocumentation)
+
 
     file_list_frame = Contstants.file_list_frame
 
     text1 = Label(file_list_frame, text=Contstants.hubName)
     text2 = Label(file_list_frame, text="nothing commited")
     text3 = Label(file_list_frame, text="[     ]")
+
+    logging.info("Menu bar created")
 
     def Update():
         MenuBar.text1.config(text=Contstants.hubName)
@@ -687,7 +817,9 @@ class MenuBar:
             MenuBar.text3.config(text="[     ]")
         else:
             MenuBar.text3.config(text="[██]")
-        
+
+        logging.info("Menu bar updated")
+
 
 class ButtonActions:
     def __init__(self):
@@ -717,6 +849,10 @@ class ButtonActions:
         Files.open_specific_file(filename=Contstants.rides["Blue"])
         Files.changes()
 
+
+
+
+
 class Window:
     def __init__(self, master=None):
         self.rootMD = Toplevel(master)
@@ -725,6 +861,9 @@ class Window:
         self.openfile()
 
     def init_window(self):
+
+        logging.info("Markdown editor opened")
+
         self.rootMD.title("TDOWN")
 
         self.rootMD.geometry("850x500")
@@ -779,16 +918,6 @@ class Window:
             except:
                 mbox.showerror("Error Saving File", "Oops!, The File: {} cannot be saved!".format(savefilename))
 
-class ToolBox:
-
-    def OpenWindow(event=False):
-        root = Toplevel(Contstants.root)
-        root.geometry("200x50")
-        btn1 = tk.Button(root, text="Green", command=ButtonActions.OpenGreen)
-        btn1.pack(padx=5, pady=5)
-
-
-    
 
 # Nastavení Tkinter
 root = Contstants.root
@@ -801,15 +930,21 @@ img = Image.open(image_path)
 img = img.resize((1000, 600))
 img_tk = ImageTk.PhotoImage(img)
 
-# 
+#Others.LogIn()
 # Otevření okna s obrázkem
 background_color = img.getpixel((0, 0))
 
 file_list_frame = Contstants.file_list_frame
-
+ 
 # Listbox for files
-file_list = tk.Listbox(file_list_frame, bg="#333333", fg="white", selectbackground="#444444")
-file_list.pack(fill=tk.BOTH, expand=1)
+print("Test")
+
+print("bef log")
+
+print("aft log")   
+
+print("Test")
+logging.info("App started")
 
 # Variable to track the currently opened file
 current_file = None
@@ -818,11 +953,18 @@ print("yview", editArea.yview())
 
 # Add buttons below the file_list
 button1 = tk.Button(file_list_frame, text="Commit message", command=GitHub.GetCommit)
-button2 = tk.Button(file_list_frame, text="Toolbox", command=ToolBox.OpenWindow)
+button2 = tk.Button(file_list_frame, text="Run", command=Others.execute)
 button3 = tk.Button(file_list_frame, text="Push", command=GitHub.Push)
 button4 = tk.Button(file_list_frame, text="Markdown editor", command=Window)
 button5 = tk.Button(file_list_frame, text="")
+print("TEST")
+logging.info("Initalized buttons")
+print("TEST")
+print(os.system("pwd"))
 
+print("Directory path")
+
+messagebox.showinfo("Info", str(os.getcwd()))
 
 MenuBar.text1.pack(fill=tk.X, padx=5, pady=2)
 MenuBar.text2.pack(fill=tk.X, padx=5, pady=2)
@@ -843,7 +985,7 @@ editArea.bind("<BackSpace>", lambda event: root.after_idle(linenums.redraw), add
 
 Files.load_files(Contstants.directory_path)
 
-file_list.bind('<ButtonRelease-1>', Files.load_selected_file)
+Contstants.file_list.bind('<ButtonRelease-1>', Files.load_selected_file)
 
 editArea.bind('<KeyRelease>', Files.changes)
 

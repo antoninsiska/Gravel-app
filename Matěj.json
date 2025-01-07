@@ -1,0 +1,33 @@
+{
+    "data": [
+        {
+            "hubName": "HUB_FLL08",
+            "pybrikcsDirectory": "/Library/Frameworks/Python.framework/Versions/3.12/bin/pybricksdev",
+            "fileName": "main.py",
+            "directoryPath": "/Users/antoninsiska/Documents/fll/",
+            "imagePath": "/Users/antoninsiska/Documents/Gravel-app/image.jpeg",
+            "specificFileNames": [
+                "yellowRide.py",
+                "demoRide.py",
+                "blueRide.py",
+                "parameters.py",
+                "rideSelect.py",
+                "greenRide.py",
+                "lightBlue.py",
+                "blackRide.py"
+            ],
+            "rides": [
+                {
+                    "Red": "None",
+                    "Green": "greenRide.py",
+                    "Black": "None",
+                    "Pink": "None",
+                    "Purple": "None",
+                    "Yellow": "yellowRide.py",
+                    "Blue": "blueRide.py"
+                }
+            ],
+            "font": "Consolas 15"
+        }
+    ]
+}

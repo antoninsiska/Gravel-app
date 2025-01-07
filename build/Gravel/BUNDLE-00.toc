@@ -1,3 +1,3 @@
 ([('Gravel',
-   '/Users/antoninsiska/Documents/Gravel-app/dist/Gravel',
+   '/Users/antoninsiska/Documents/Projekty/Gravel-app/dist/Gravel',
    'EXECUTABLE')],)

@@ -1,0 +1,27 @@
+18:19:38 - Program started
+18:19:38 - App started
+18:19:38 - Initalized buttons
+18:19:40 - Loading files
+18:19:41 - Checking for changes
+18:19:41 - Menu bar updated
+18:19:42 - Opening json file directory settings
+18:19:49 - Json file directory changed
+18:19:51 - Checking for changes
+18:19:51 - Menu bar updated
+18:19:51 - Loaded json data
+18:19:51 - Menu bar updated
+18:19:51 - Loading files
+18:19:51 - Checking for changes
+18:19:51 - Menu bar updated
+18:19:51 - Checking for changes
+18:19:51 - Menu bar updated
+18:20:01 - Checking for changes
+18:20:01 - Menu bar updated
+18:20:02 - Checking for changes
+18:20:02 - Menu bar updated
+18:20:08 - Opening settings
+18:20:11 - Loading files
+18:20:56 - Checking for changes
+18:20:56 - Menu bar updated
+18:20:57 - Checking for changes
+18:20:57 - Menu bar updated

@@ -1,0 +1,202 @@
+2024-12-25 18:42:24,873 - INFO - Logování bylo inicializováno.
+2024-12-25 18:42:29,746 - INFO - Tlačítko bylo stisknuto.
+2024-12-25 18:42:30,715 - INFO - Tlačítko bylo stisknuto.
+2024-12-25 18:42:30,880 - INFO - Tlačítko bylo stisknuto.
+2024-12-25 18:54:07,716 - INFO - Menu bar created
+2024-12-25 18:54:07,725 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2024-12-25 18:54:07,749 - INFO - App started
+2024-12-25 18:54:07,750 - INFO - Initalized buttons
+2024-12-25 18:54:09,061 - INFO - Loading files
+2024-12-25 18:54:21,035 - INFO - Checking for changes
+2024-12-25 18:54:21,040 - INFO - Menu bar updated
+2024-12-25 18:54:23,019 - INFO - Opening json file directory settings
+2024-12-25 18:54:27,449 - INFO - Json file directory changed
+2024-12-25 18:54:29,031 - INFO - Checking for changes
+2024-12-25 18:54:29,032 - INFO - Menu bar updated
+2024-12-25 18:54:29,162 - INFO - Loaded json data
+2024-12-25 18:54:29,163 - INFO - Menu bar updated
+2024-12-25 18:54:29,163 - INFO - Loading files
+2024-12-25 18:54:29,241 - INFO - Checking for changes
+2024-12-25 18:54:29,242 - INFO - Menu bar updated
+2024-12-25 18:54:29,589 - INFO - Checking for changes
+2024-12-25 18:54:29,590 - INFO - Menu bar updated
+2024-12-25 18:54:30,269 - INFO - Checking for changes
+2024-12-25 18:54:30,269 - INFO - Menu bar updated
+2024-12-25 18:54:30,585 - INFO - Checking for changes
+2024-12-25 18:54:30,586 - INFO - Menu bar updated
+2024-12-25 18:54:30,918 - INFO - Checking for changes
+2024-12-25 18:54:30,919 - INFO - Menu bar updated
+2024-12-25 18:54:32,743 - INFO - Saving file
+2024-12-25 18:54:32,745 - INFO - Menu bar updated
+2024-12-25 22:06:16,189 - INFO - Menu bar created
+2024-12-25 22:06:16,213 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2024-12-25 22:06:16,249 - INFO - App started
+2024-12-25 22:06:16,251 - INFO - Initalized buttons
+2024-12-25 22:06:17,878 - INFO - Loading files
+2024-12-25 22:27:59,958 - INFO - Checking for changes
+2024-12-25 22:27:59,966 - INFO - Menu bar updated
+2024-12-25 22:28:00,680 - INFO - Opening json file directory settings
+2024-12-25 22:28:05,914 - INFO - Json file directory changed
+2024-12-25 22:28:07,075 - INFO - Checking for changes
+2024-12-25 22:28:07,075 - INFO - Menu bar updated
+2024-12-25 22:28:07,286 - INFO - Loaded json data
+2024-12-25 22:28:07,287 - INFO - Menu bar updated
+2024-12-25 22:28:07,287 - INFO - Loading files
+2024-12-25 22:28:07,365 - INFO - Checking for changes
+2024-12-25 22:28:07,366 - INFO - Menu bar updated
+2024-12-25 22:28:07,769 - INFO - Checking for changes
+2024-12-25 22:28:07,771 - INFO - Menu bar updated
+2025-01-03 15:36:35,536 - INFO - Menu bar created
+2025-01-03 15:36:35,558 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-03 15:36:35,599 - INFO - App started
+2025-01-03 15:36:35,601 - INFO - Initalized buttons
+2025-01-03 15:37:36,896 - INFO - Menu bar created
+2025-01-03 15:37:36,907 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-03 15:37:36,933 - INFO - App started
+2025-01-03 15:37:36,934 - INFO - Initalized buttons
+2025-01-03 15:39:44,482 - INFO - Menu bar created
+2025-01-03 15:39:44,494 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-03 15:39:44,520 - INFO - App started
+2025-01-03 15:39:44,521 - INFO - Initalized buttons
+2025-01-03 15:42:21,478 - INFO - Menu bar created
+2025-01-03 15:42:21,489 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-03 15:42:21,515 - INFO - App started
+2025-01-03 15:42:21,516 - INFO - Initalized buttons
+2025-01-03 15:42:23,989 - INFO - Loading files
+2025-01-03 15:42:26,454 - INFO - Checking for changes
+2025-01-03 15:42:26,458 - INFO - Menu bar updated
+2025-01-03 15:42:32,907 - INFO - Checking for changes
+2025-01-03 15:42:32,907 - INFO - Menu bar updated
+2025-01-03 15:42:32,930 - INFO - Checking for changes
+2025-01-03 15:42:32,930 - INFO - Menu bar updated
+2025-01-03 15:42:33,045 - INFO - Checking for changes
+2025-01-03 15:42:33,045 - INFO - Menu bar updated
+2025-01-03 15:42:33,469 - INFO - Checking for changes
+2025-01-03 15:42:33,470 - INFO - Menu bar updated
+2025-01-03 15:42:33,553 - INFO - Checking for changes
+2025-01-03 15:42:33,553 - INFO - Menu bar updated
+2025-01-03 15:42:34,066 - INFO - Checking for changes
+2025-01-03 15:42:34,066 - INFO - Menu bar updated
+2025-01-03 15:42:34,969 - INFO - Checking for changes
+2025-01-03 15:42:34,969 - INFO - Menu bar updated
+2025-01-03 15:42:34,983 - INFO - Checking for changes
+2025-01-03 15:42:34,983 - INFO - Menu bar updated
+2025-01-03 15:42:54,938 - INFO - Menu bar created
+2025-01-03 15:42:54,950 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-03 15:42:54,976 - INFO - App started
+2025-01-03 15:42:54,977 - INFO - Initalized buttons
+2025-01-03 15:42:56,342 - INFO - Loading files
+2025-01-03 15:42:57,683 - INFO - Checking for changes
+2025-01-03 15:42:57,685 - INFO - Menu bar updated
+2025-01-03 15:45:43,982 - INFO - Menu bar created
+2025-01-03 15:45:43,992 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-03 15:45:44,016 - INFO - App started
+2025-01-03 15:45:44,016 - INFO - Initalized buttons
+2025-01-03 15:45:45,570 - INFO - Loading files
+2025-01-03 15:46:35,913 - INFO - Menu bar created
+2025-01-03 15:46:35,926 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-03 15:46:35,950 - INFO - App started
+2025-01-03 15:46:35,951 - INFO - Initalized buttons
+2025-01-03 15:46:37,619 - INFO - Loading files
+2025-01-06 18:12:03,835 - INFO - Menu bar created
+2025-01-06 18:12:03,864 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:12:03,900 - INFO - App started
+2025-01-06 18:12:03,901 - INFO - Initalized buttons
+2025-01-06 18:12:05,695 - INFO - Loading files
+2025-01-06 18:12:06,759 - INFO - Checking for changes
+2025-01-06 18:12:06,762 - INFO - Menu bar updated
+2025-01-06 18:13:10,143 - INFO - Menu bar created
+2025-01-06 18:13:10,154 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:13:17,735 - INFO - Menu bar created
+2025-01-06 18:13:17,745 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:13:17,768 - INFO - App started
+2025-01-06 18:13:17,769 - INFO - Initalized buttons
+2025-01-06 18:13:19,269 - INFO - Loading files
+2025-01-06 18:13:20,228 - INFO - Checking for changes
+2025-01-06 18:13:20,229 - INFO - Menu bar updated
+2025-01-06 18:13:20,928 - INFO - Executing program
+2025-01-06 18:43:32,580 - INFO - Menu bar created
+2025-01-06 18:43:32,590 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:43:32,614 - INFO - App started
+2025-01-06 18:43:32,615 - INFO - Initalized buttons
+2025-01-06 18:43:35,259 - INFO - Loading files
+2025-01-06 18:44:32,697 - INFO - Menu bar created
+2025-01-06 18:44:32,708 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:44:32,734 - INFO - App started
+2025-01-06 18:44:32,735 - INFO - Initalized buttons
+2025-01-06 18:44:34,545 - INFO - Loading files
+2025-01-06 18:50:10,634 - INFO - Menu bar created
+2025-01-06 18:50:10,644 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:50:10,666 - INFO - App started
+2025-01-06 18:50:10,667 - INFO - Initalized buttons
+2025-01-06 18:50:13,043 - INFO - Loading files
+2025-01-06 18:50:16,239 - INFO - Checking for changes
+2025-01-06 18:50:16,241 - INFO - Menu bar updated
+2025-01-06 18:51:05,189 - INFO - Menu bar created
+2025-01-06 18:51:05,198 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:51:05,221 - INFO - App started
+2025-01-06 18:51:05,221 - INFO - Initalized buttons
+2025-01-06 18:51:06,961 - INFO - Loading files
+2025-01-06 18:53:24,809 - INFO - Menu bar created
+2025-01-06 18:53:24,820 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:53:24,844 - INFO - App started
+2025-01-06 18:53:24,845 - INFO - Initalized buttons
+2025-01-06 18:53:26,261 - INFO - Loading files
+2025-01-06 18:56:18,372 - INFO - Menu bar created
+2025-01-06 18:56:18,381 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 18:56:18,404 - INFO - App started
+2025-01-06 18:56:18,404 - INFO - Initalized buttons
+2025-01-06 18:56:19,745 - INFO - Loading files
+2025-01-06 19:04:51,841 - INFO - Menu bar created
+2025-01-06 19:04:51,850 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 19:04:51,872 - INFO - App started
+2025-01-06 19:04:51,873 - INFO - Initalized buttons
+2025-01-06 19:04:53,326 - INFO - Loading files
+2025-01-06 19:06:11,385 - INFO - Checking for changes
+2025-01-06 19:06:11,389 - INFO - Menu bar updated
+2025-01-06 19:06:13,089 - INFO - Checking for changes
+2025-01-06 19:06:13,090 - INFO - Menu bar updated
+2025-01-06 19:15:17,815 - INFO - Menu bar created
+2025-01-06 19:15:17,824 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 19:15:17,846 - INFO - App started
+2025-01-06 19:15:17,847 - INFO - Initalized buttons
+2025-01-06 19:15:19,829 - INFO - Loading files
+2025-01-06 19:15:41,908 - INFO - Menu bar created
+2025-01-06 19:15:41,917 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 19:15:41,940 - INFO - App started
+2025-01-06 19:15:41,940 - INFO - Initalized buttons
+2025-01-06 19:15:43,512 - INFO - Loading files
+2025-01-06 20:06:18,039 - INFO - Checking for changes
+2025-01-06 20:06:18,046 - INFO - Menu bar updated
+2025-01-06 20:19:17,671 - INFO - Menu bar created
+2025-01-06 20:19:17,683 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 20:19:17,709 - INFO - App started
+2025-01-06 20:19:17,711 - INFO - Initalized buttons
+2025-01-06 20:19:19,456 - INFO - Loading files
+2025-01-06 20:25:26,732 - INFO - Menu bar created
+2025-01-06 20:25:26,743 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 20:25:26,768 - INFO - App started
+2025-01-06 20:25:26,769 - INFO - Initalized buttons
+2025-01-06 20:25:28,223 - INFO - Loading files
+2025-01-06 20:30:20,645 - INFO - Menu bar created
+2025-01-06 20:30:20,656 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 20:30:20,680 - INFO - App started
+2025-01-06 20:30:20,681 - INFO - Initalized buttons
+2025-01-06 20:34:47,152 - INFO - Loading files
+2025-01-06 20:36:54,807 - INFO - Menu bar created
+2025-01-06 20:36:54,817 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 20:36:54,839 - INFO - App started
+2025-01-06 20:36:54,840 - INFO - Initalized buttons
+2025-01-06 20:36:56,980 - INFO - Loading files
+2025-01-06 20:37:31,721 - INFO - Menu bar created
+2025-01-06 20:37:31,731 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 20:37:31,753 - INFO - App started
+2025-01-06 20:37:31,753 - INFO - Initalized buttons
+2025-01-06 20:37:33,476 - INFO - Loading files
+2025-01-06 20:38:03,576 - INFO - Menu bar created
+2025-01-06 20:38:03,587 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-06 20:38:03,608 - INFO - App started
+2025-01-06 20:38:03,609 - INFO - Initalized buttons
+2025-01-06 20:38:05,631 - INFO - Loading files
+2025-01-06 20:38:22,643 - INFO - Checking for changes
+2025-01-06 20:38:22,655 - INFO - Menu bar updated
