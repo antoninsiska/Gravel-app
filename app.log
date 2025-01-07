@@ -200,3 +200,158 @@
 2025-01-06 20:38:05,631 - INFO - Loading files
 2025-01-06 20:38:22,643 - INFO - Checking for changes
 2025-01-06 20:38:22,655 - INFO - Menu bar updated
+2025-01-07 21:58:26,364 - INFO - Menu bar created
+2025-01-07 21:58:26,541 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-07 21:58:26,776 - INFO - App started
+2025-01-07 21:58:26,779 - INFO - Initalized buttons
+2025-01-07 21:58:30,541 - INFO - Loading files
+2025-01-07 22:05:05,214 - INFO - Menu bar created
+2025-01-07 22:05:05,224 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-07 22:05:05,255 - INFO - App started
+2025-01-07 22:05:05,256 - INFO - Initalized buttons
+2025-01-07 22:05:06,855 - INFO - Loading files
+2025-01-07 22:05:12,717 - INFO - Opening json file directory settings
+2025-01-07 22:05:18,751 - INFO - Json file directory changed
+2025-01-07 22:05:20,409 - INFO - Checking for changes
+2025-01-07 22:05:20,414 - INFO - Menu bar updated
+2025-01-07 22:05:20,614 - INFO - Loaded json data
+2025-01-07 22:05:20,615 - INFO - Menu bar updated
+2025-01-07 22:05:20,615 - INFO - Loading files
+2025-01-07 22:05:20,665 - INFO - Checking for changes
+2025-01-07 22:05:20,665 - INFO - Menu bar updated
+2025-01-07 22:05:21,490 - INFO - Checking for changes
+2025-01-07 22:05:21,491 - INFO - Menu bar updated
+2025-01-07 22:05:22,282 - INFO - Checking for changes
+2025-01-07 22:05:22,282 - INFO - Menu bar updated
+2025-01-07 22:06:04,787 - INFO - Menu bar created
+2025-01-07 22:06:04,797 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-07 22:06:04,821 - INFO - App started
+2025-01-07 22:06:04,821 - INFO - Initalized buttons
+2025-01-07 22:06:06,630 - INFO - Loading files
+2025-01-07 22:06:21,998 - INFO - Opening json file directory settings
+2025-01-07 22:06:24,344 - INFO - Json file directory changed
+2025-01-07 22:06:27,309 - INFO - Checking for changes
+2025-01-07 22:06:27,311 - INFO - Menu bar updated
+2025-01-07 22:06:27,536 - INFO - Loaded json data
+2025-01-07 22:06:27,537 - INFO - Menu bar updated
+2025-01-07 22:06:27,537 - INFO - Loading files
+2025-01-07 22:06:27,617 - INFO - Checking for changes
+2025-01-07 22:06:27,618 - INFO - Menu bar updated
+2025-01-07 22:06:27,981 - INFO - Checking for changes
+2025-01-07 22:06:27,981 - INFO - Menu bar updated
+2025-01-07 22:06:29,607 - INFO - Checking for changes
+2025-01-07 22:06:29,607 - INFO - Menu bar updated
+2025-01-07 22:06:40,352 - INFO - Checking for changes
+2025-01-07 22:06:40,354 - INFO - Menu bar updated
+2025-01-07 22:07:56,244 - INFO - Menu bar created
+2025-01-07 22:07:56,254 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-07 22:07:56,275 - INFO - App started
+2025-01-07 22:07:56,276 - INFO - Initalized buttons
+2025-01-07 22:07:57,686 - INFO - Loading files
+2025-01-07 22:08:00,121 - INFO - Checking for changes
+2025-01-07 22:08:00,122 - INFO - Menu bar updated
+2025-01-07 22:08:02,656 - INFO - Checking for changes
+2025-01-07 22:08:02,657 - INFO - Menu bar updated
+2025-01-07 22:08:02,860 - INFO - Checking for changes
+2025-01-07 22:08:02,861 - INFO - Menu bar updated
+2025-01-07 22:08:04,106 - INFO - Checking for changes
+2025-01-07 22:08:04,106 - INFO - Menu bar updated
+2025-01-07 22:08:04,526 - INFO - Checking for changes
+2025-01-07 22:08:04,527 - INFO - Menu bar updated
+2025-01-07 22:08:06,209 - INFO - Checking for changes
+2025-01-07 22:08:06,210 - INFO - Menu bar updated
+2025-01-07 22:08:06,323 - INFO - Checking for changes
+2025-01-07 22:08:06,323 - INFO - Menu bar updated
+2025-01-07 22:08:08,329 - INFO - Opening json file directory settings
+2025-01-07 22:08:10,911 - INFO - Json file directory changed
+2025-01-07 22:08:16,656 - INFO - Checking for changes
+2025-01-07 22:08:16,656 - INFO - Menu bar updated
+2025-01-07 22:08:16,850 - INFO - Checking for changes
+2025-01-07 22:08:16,851 - INFO - Menu bar updated
+2025-01-07 22:08:17,230 - INFO - Loaded json data
+2025-01-07 22:08:17,230 - INFO - Menu bar updated
+2025-01-07 22:08:17,230 - INFO - Loading files
+2025-01-07 22:08:17,231 - INFO - If log file direcotry was wrong the app from log file starts NOW, and this is first you message you can see.
+2025-01-07 22:08:17,321 - INFO - Checking for changes
+2025-01-07 22:08:17,321 - INFO - Menu bar updated
+2025-01-07 22:08:18,038 - INFO - Checking for changes
+2025-01-07 22:08:18,039 - INFO - Menu bar updated
+2025-01-07 22:08:18,673 - INFO - Checking for changes
+2025-01-07 22:08:18,674 - INFO - Menu bar updated
+2025-01-07 22:08:56,434 - INFO - Menu bar created
+2025-01-07 22:08:56,444 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-07 22:08:56,466 - INFO - App started
+2025-01-07 22:08:56,467 - INFO - Initalized buttons
+2025-01-07 22:08:59,102 - INFO - Loading files
+2025-01-07 22:09:19,650 - INFO - Menu bar created
+2025-01-07 22:09:19,660 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-07 22:09:19,685 - INFO - App started
+2025-01-07 22:09:19,685 - INFO - Initalized buttons
+2025-01-07 22:09:19,686 - INFO - Loading files
+2025-01-07 22:19:32,002 - INFO - Menu bar created
+2025-01-07 22:19:32,339 - DEBUG - tag: ExifIFD (34665) - type: long (4) - value: b'\x00\x00\x00\x1a'
+2025-01-07 22:19:32,546 - INFO - App started
+2025-01-07 22:19:32,550 - INFO - Initalized buttons
+2025-01-07 22:19:32,552 - INFO - Loading files
+2025-01-07 22:19:38,013 - INFO - Opening json file directory settings
+2025-01-07 22:19:42,258 - INFO - Json file directory changed
+2025-01-07 22:19:44,165 - INFO - Checking for changes
+2025-01-07 22:19:44,173 - INFO - Menu bar updated
+2025-01-07 22:19:45,170 - INFO - Loaded json data
+2025-01-07 22:19:45,171 - INFO - Menu bar updated
+2025-01-07 22:19:45,171 - INFO - Loading files
+2025-01-07 22:19:45,172 - INFO - If log file direcotry was wrong the app from log file starts NOW, and this is first you message you can see. If you can se any neweer message the log file direcotry was right
+2025-01-07 22:19:45,277 - INFO - Checking for changes
+2025-01-07 22:19:45,278 - INFO - Menu bar updated
+2025-01-07 22:19:45,842 - INFO - Checking for changes
+2025-01-07 22:19:45,842 - INFO - Menu bar updated
+2025-01-07 22:20:11,741 - INFO - Checking for changes
+2025-01-07 22:20:11,742 - INFO - Menu bar updated
+2025-01-07 22:20:12,884 - INFO - Checking for changes
+2025-01-07 22:20:12,884 - INFO - Menu bar updated
+2025-01-07 22:20:14,889 - INFO - Checking for changes
+2025-01-07 22:20:14,889 - INFO - Menu bar updated
+2025-01-07 22:20:16,079 - INFO - Checking for changes
+2025-01-07 22:20:16,080 - INFO - Menu bar updated
+2025-01-07 22:20:16,218 - INFO - Checking for changes
+2025-01-07 22:20:16,219 - INFO - Menu bar updated
+2025-01-07 22:20:16,376 - INFO - Checking for changes
+2025-01-07 22:20:16,377 - INFO - Menu bar updated
+2025-01-07 22:20:17,780 - INFO - Checking for changes
+2025-01-07 22:20:17,781 - INFO - Menu bar updated
+2025-01-07 22:20:17,929 - INFO - Checking for changes
+2025-01-07 22:20:17,930 - INFO - Menu bar updated
+2025-01-07 22:20:18,059 - INFO - Checking for changes
+2025-01-07 22:20:18,060 - INFO - Menu bar updated
+2025-01-07 22:20:18,171 - INFO - Checking for changes
+2025-01-07 22:20:18,172 - INFO - Menu bar updated
+2025-01-07 22:20:18,330 - INFO - Checking for changes
+2025-01-07 22:20:18,330 - INFO - Menu bar updated
+2025-01-07 22:20:18,468 - INFO - Checking for changes
+2025-01-07 22:20:18,469 - INFO - Menu bar updated
+2025-01-07 22:20:18,635 - INFO - Checking for changes
+2025-01-07 22:20:18,636 - INFO - Menu bar updated
+2025-01-07 22:20:18,769 - INFO - Checking for changes
+2025-01-07 22:20:18,769 - INFO - Menu bar updated
+2025-01-07 22:20:18,902 - INFO - Checking for changes
+2025-01-07 22:20:18,902 - INFO - Menu bar updated
+2025-01-07 22:20:19,271 - INFO - Checking for changes
+2025-01-07 22:20:19,272 - INFO - Menu bar updated
+2025-01-07 22:20:19,608 - INFO - Checking for changes
+2025-01-07 22:20:19,608 - INFO - Menu bar updated
+2025-01-07 22:20:19,851 - INFO - Checking for changes
+2025-01-07 22:20:19,852 - INFO - Menu bar updated
+2025-01-07 22:20:20,121 - INFO - Checking for changes
+2025-01-07 22:20:20,122 - INFO - Menu bar updated
+2025-01-07 22:20:20,494 - INFO - Checking for changes
+2025-01-07 22:20:20,495 - INFO - Menu bar updated
+2025-01-07 22:20:20,655 - INFO - Checking for changes
+2025-01-07 22:20:20,656 - INFO - Menu bar updated
+2025-01-07 22:20:20,806 - INFO - Checking for changes
+2025-01-07 22:20:20,807 - INFO - Menu bar updated
+2025-01-07 22:20:21,131 - INFO - Checking for changes
+2025-01-07 22:20:21,131 - INFO - Menu bar updated
+2025-01-07 22:20:21,403 - INFO - Checking for changes
+2025-01-07 22:20:21,403 - INFO - Menu bar updated
+2025-01-07 22:20:22,923 - INFO - Saving file
+2025-01-07 22:20:22,925 - INFO - Menu bar updated

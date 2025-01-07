@@ -1,0 +1,3 @@
+([('main',
+   '/Users/antoninsiska/Documents/Projekty/Gravel-app/dist/main',
+   'EXECUTABLE')],)

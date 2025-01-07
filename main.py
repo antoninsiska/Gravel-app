@@ -115,6 +115,8 @@ class Contstants:
 
     previousText = ''
 
+    logDir = "/Users/antoninsiska/Documents/Projekty/Gravel-app/app.log"
+
     normal = TextFormating.rgb((234, 234, 234))
     keywords = TextFormating.rgb((234, 95, 95))
     comments = TextFormating.rgb((95, 234, 165))
@@ -183,6 +185,7 @@ class Contstants:
     yes = True
 
     saved = False
+
 
     
     
@@ -712,6 +715,7 @@ class Json:
         Contstants.rides = data['data'][0]['rides'][0]
         Contstants.specific_file_names = data['data'][0]['specificFileNames']
         Contstants.image_path = data['data'][0]['imagePath']
+        Contstants.logDir = data['data'][0]['logDirectory']
         logging.info("Loaded json data")
         
         
@@ -726,6 +730,7 @@ class Json:
         print(Contstants.image_path)
         print(Contstants.rides)
         print(Contstants.specific_file_names)
+        print(Contstants.logDir)
         print("------------------------")
         Json.Load()
         MenuBar.Update()
@@ -737,6 +742,8 @@ class Json:
         print(Contstants.image_path)
         print(Contstants.rides)
         print(Contstants.specific_file_names)
+        print(Contstants.logDir)
+        logging.info("If log file direcotry was wrong the app from log file starts NOW, and this is first you message you can see. If you can se any neweer message the log file direcotry was right")
         print("------------------------")
         
 class MenuBar:
@@ -960,11 +967,7 @@ button5 = tk.Button(file_list_frame, text="")
 print("TEST")
 logging.info("Initalized buttons")
 print("TEST")
-print(os.system("pwd"))
 
-print("Directory path")
-
-messagebox.showinfo("Info", str(os.getcwd()))
 
 MenuBar.text1.pack(fill=tk.X, padx=5, pady=2)
 MenuBar.text2.pack(fill=tk.X, padx=5, pady=2)
